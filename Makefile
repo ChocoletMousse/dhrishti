@@ -3,8 +3,12 @@
 export 
 
 create-env:
-	python3 -m venv env
+	python3 -m venv .venv
 
 
-install-reqs:
+requirements:
 	pip install -r requirements.txt
+
+
+run: 
+	python3 main.py
