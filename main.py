@@ -1,4 +1,4 @@
-from sources.reddit import RedditConnector
+from sources.reddit.config import RedditConnector
 
 
 def main():
