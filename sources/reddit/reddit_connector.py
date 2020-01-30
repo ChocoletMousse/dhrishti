@@ -1,10 +1,12 @@
 import os
 import praw
 from sinks.database import Database
+from sinks import schema
 from praw import Reddit
 
 
 class RedditConnector(Database):
+    """Self-contained methods for Reddit data"""
     client_id = os.getenv("REDDIT_CLIENT_ID")
     client_secret = os.getenv("REDDIT_SECRET")
     instance = os.getenv("REDDIT_APPLICATION")
@@ -30,8 +32,4 @@ class RedditConnector(Database):
         submissions = subreddit.top(limit=limit)
         for submission in submissions:
             self.document = submission.title
-            delattr(submission, "_reddit")
-            delattr(submission, "author")
-            delattr(submission, "subreddit")
-            # print(submission)
-            self.write_to_firestore(submission.__dict__)
+            self.write_to_firestore(schema.reddit_submission_schema(submission))
