@@ -1,8 +1,8 @@
-# discussionalysis
+# dhrishti
 
 ## _user journey_:
 1) User is interested in a certain topic does a shallow dive via dashboard to find any actionable insights.
-2) User decides to use this service to get objective results to validate their insights, as well as getting additional information to be displayed on the dashboard
+2) User decides to use this service to get objective results to validate their insights, as well as getting additional information to be displayed on the dashboard.
 3) If the information yielded is relevant, user can take action via the company's policy.
 
 ## _process_:
