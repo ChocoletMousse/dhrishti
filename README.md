@@ -7,14 +7,16 @@
 
 ## _process_:
 
-1) Create a restful service that makes calls to the reddit api based on incoming requests containing search parameters (e.g. subreddit, user).
+1) Create a restful service that makes calls to the social media api based on incoming requests containing search parameters (e.g. subreddit, user).
 
 2) User makes a request.
 
-3) Results of the query are yielded and stored in a database:
+3) Results of the query are stored in a database:
     
     * The raw stored results will be available for display on a dashboard.
 4) The raw data will be passed into a machine learning algorithm. The output will also be stored in the database, available for viewing on the dashboard.
+5) The output of the algorithm will suggest any particular threads which are worth delving into. The user can choose to dig into these threads or not.
+    * If yes, the algorithm will search for comments 
 
 ## _todo_:
 
