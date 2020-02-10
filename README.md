@@ -25,4 +25,5 @@
 - Decide what database to use
 - Decide how to write to database
 
-
+## _log_:
+- For each object brought into a firestore collection: create subcollections for the the item itself, and NLP output. 

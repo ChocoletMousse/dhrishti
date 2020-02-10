@@ -3,3 +3,4 @@ python-dotenv
 praw
 django
 google-cloud-firestore
+google-cloud-language
