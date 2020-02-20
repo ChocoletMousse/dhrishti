@@ -26,4 +26,4 @@
 - Decide how to write to database
 
 ## _log_:
-- For each object brought into a firestore collection: create subcollections for the the item itself, and NLP output. 
+- [ ] create a view from the index to fetch results from reddit.

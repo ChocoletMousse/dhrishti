@@ -22,10 +22,18 @@ class RedditConnector(Database):
             user_agent=self.instance
         )
 
-    def fetch_top_rated_posts(self, subreddit_name: str, limit: int):
+    def fetch_top_posts(self, subreddit_name: str, limit: int):
         """Write the retrieved subreddit submissions to Firestore."""
         subreddit_obj = self._reddit_instance.subreddit(subreddit_name)
         submissions = subreddit_obj.top(limit=limit)
+        for submission in submissions:
+            item = schema.reddit_submission_schema(submission)
+            self.write_to_firestore(subreddit_name, submission.id, item)
+
+    def fetch_latest_posts(self, subreddit_name: str, limit: int):
+        """Write the retrieved subreddit submissions to Firestore."""
+        subreddit_obj = self._reddit_instance.subreddit(subreddit_name)
+        submissions = subreddit_obj.new(limit=limit)
         for submission in submissions:
             item = schema.reddit_submission_schema(submission)
             self.write_to_firestore(subreddit_name, submission.id, item)

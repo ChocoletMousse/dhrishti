@@ -21,9 +21,11 @@ class Database():
 
     def retrieve_docs_from_firestore(self, collection, limit: int):
         """Retrieves the specified number of documents from a given collection."""
-        docs = self.db.collection(collection).limit(limit).stream()
-        for doc in docs:
-            logging.info(f"{doc.to_dict()}")
+        documents = self.db.collection(collection).limit(limit).stream()
+        posts = []
+        for document in documents:
+            posts.append(document.to_dict())
+        return posts
 
     def clear_collection(self, collection):
         """Clear all documents in a collection."""
