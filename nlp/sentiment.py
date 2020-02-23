@@ -7,10 +7,11 @@ class SentimentAnalyser():
     def __init__(self):
         self._client = language.LanguageServiceClient()
 
-    def analyse_titles(self, titles: list):
+    def analyse_titles(self, documents: list):
         """Go through each document in a collection and analyse the sentiment."""
         outputs = []
-        for title in titles:
+        for doc in documents:
+            title = doc.get("title")
             document = types.Document(
                  type=enums.Document.Type.PLAIN_TEXT,
                  content=title
@@ -20,7 +21,7 @@ class SentimentAnalyser():
             outputs.append(annotation)
         return outputs
 
-    def display_annotation(title: str, annotation):
+    def display_annotation(self, title: str, annotation):
         """Print the output of the sentiment analysis"""
         print(f"""
             {title} =>

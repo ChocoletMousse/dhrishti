@@ -19,7 +19,7 @@ class Database():
         except exceptions.NotFound:
             logging.info(f"{document} in {collection} was not found in Firestore.")
 
-    def retrieve_docs_from_firestore(self, collection, limit: int):
+    def retrieve_docs_from_firestore(self, collection, limit: int) -> list:
         """Retrieves the specified number of documents from a given collection."""
         documents = self.db.collection(collection).limit(limit).stream()
         posts = []
