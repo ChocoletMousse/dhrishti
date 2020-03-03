@@ -27,3 +27,5 @@
 
 ## _log_:
 - [ ] create a view from the index to fetch results from reddit.
+- [ ] give a score to a title based
+- [ ] determine a threshold which determines whether there should be further delving.

@@ -12,7 +12,7 @@ sentiment = SentimentAnalyser()
 
 # Create your views here.
 def index(request):
-    return HttpResponse("This is the index page of the dhrishti project.")
+    return render(request, "dhrishtirest/index.html")
 
 
 @require_http_methods(["GET"])
@@ -30,5 +30,8 @@ def view_subreddit_top(request, subreddit, limit):
 @require_http_methods(["GET"])
 def analyse_sentiment(request, subreddit, limit):
     documents = reddit_connector.retrieve_docs_from_firestore(subreddit, limit)
-    output = sentiment.analyse_titles(documents)
-    return HttpResponse("gave the following scores for the posts in %s: %s" % (subreddit, output))
+    docs_analysis = sentiment.analyse_titles(documents)
+    context = {
+        "docs_analysis": docs_analysis
+    }
+    return render(request, "dhrishtirest/analysis.html", context)
