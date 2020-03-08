@@ -1,11 +1,11 @@
 <html>
     <title>nlp output</title>
     <body>
-    {% if docs_analysis %}
+    {% if document_entities_analysis %}
     <p>The results of the analysis are as follows:</p>
-        {% for doc_analysis in docs_analysis %}
+        {% for entities in document_entities_analysis %}
         =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-= <br>
-            {% for entity in doc_analysis %} <br>
+            {% for entity in entities %} <br>
                 name: {{ entity.name }} <br>
                 sentiment score: {{ entity.sentiment.score }} <br>
                 sentiment magnitude: {{ entity.sentiment.magnitude }} <br>

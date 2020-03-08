@@ -1,4 +1,4 @@
-from google.cloud import firestore, exceptions
+from google.cloud import firestore
 import logging
 
 
@@ -12,20 +12,14 @@ class Database():
         logging.info(f"saving {document} to collection {collection}")
         self.db.collection(collection).document(document).set(item)
 
-    def retrieve_doc_from_firestore(self, collection, document):
+    def update_doc_from_firestore(self, collection, document, name: str, value):
         """Fetch an document from a collection in a Firestore."""
-        try:
-            return self.db.collection(collection).document(document).get()
-        except exceptions.NotFound:
-            logging.info(f"{document} in {collection} was not found in Firestore.")
+        self.db.collection(collection).document(document).update({name: value})
 
     def retrieve_docs_from_firestore(self, collection, limit: int) -> list:
         """Retrieves the specified number of documents from a given collection."""
         documents = self.db.collection(collection).limit(limit).stream()
-        posts = []
-        for document in documents:
-            posts.append(document.to_dict())
-        return posts
+        return documents
 
     def clear_collection(self, collection):
         """Clear all documents in a collection."""

@@ -30,8 +30,8 @@ def view_subreddit_top(request, subreddit, limit):
 @require_http_methods(["GET"])
 def analyse_sentiment(request, subreddit, limit):
     documents = reddit_connector.retrieve_docs_from_firestore(subreddit, limit)
-    docs_analysis = sentiment.analyse_titles(documents)
+    document_entities_analysis = sentiment.analyse_titles(subreddit, documents)
     context = {
-        "docs_analysis": docs_analysis
+        "document_entities_analysis": document_entities_analysis
     }
     return render(request, "dhrishtirest/analysis.html", context)
