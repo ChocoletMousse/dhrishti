@@ -28,7 +28,7 @@ class RedditConnector(Database):
         submissions = subreddit_obj.top(limit=limit)
         for submission in submissions:
             item = schema.reddit_submission_schema(submission)
-            self.write_to_firestore(subreddit_name, submission.id, item)
+            self.write_doc_to_firestore(subreddit_name, submission.id, item)
 
     def fetch_latest_posts(self, subreddit_name: str, limit: int):
         """Write the retrieved subreddit submissions to Firestore."""
@@ -36,4 +36,4 @@ class RedditConnector(Database):
         submissions = subreddit_obj.new(limit=limit)
         for submission in submissions:
             item = schema.reddit_submission_schema(submission)
-            self.write_to_firestore(subreddit_name, submission.id, item)
+            self.write_doc_to_firestore(subreddit_name, submission.id, item)

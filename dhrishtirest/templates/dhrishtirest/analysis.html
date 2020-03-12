@@ -1,15 +1,14 @@
 <html>
     <title>nlp output</title>
     <body>
-    {% if document_entities_analysis %}
+    {% if sentences_analysis %}
     <p>The results of the analysis are as follows:</p>
-        {% for entities in document_entities_analysis %}
+        {% for sentences in sentences_analysis %}
         =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-= <br>
-            {% for entity in entities %} <br>
-                name: {{ entity.name }} <br>
-                sentiment score: {{ entity.sentiment.score }} <br>
-                sentiment magnitude: {{ entity.sentiment.magnitude }} <br>
-                salience: {{ entity.salience }} <br>
+            {% for sentence in sentences %} <br>
+                sentence: {{ sentence.text.content }} <br>
+                sentiment score: {{ sentence.sentiment.score }} <br>
+                sentiment magnitude: {{ sentence.sentiment.magnitude }} <br>
             {% endfor %}
         {% endfor %}
     {% else %}
