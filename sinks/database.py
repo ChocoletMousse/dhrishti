@@ -12,9 +12,9 @@ class Database():
         logging.info(f"saving {document} to collection {collection}")
         self.db.collection(collection).document(document).set(item)
 
-    def update_doc_from_firestore(self, collection, document, name: str, value):
+    def update_doc_from_firestore(self, collection, document, parameters: dict):
         """Fetch an document from a collection in a Firestore."""
-        self.db.collection(collection).document(document).update({name: value})
+        self.db.collection(collection).document(document).update(parameters)
 
     def get_docs_from_firestore(self, collection, limit: int) -> list:
         """Retrieves the specified number of documents from a given collection."""

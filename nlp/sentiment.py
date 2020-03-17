@@ -1,7 +1,10 @@
 from google.cloud import language
 from google.cloud.language import types, enums
-from sinks.database import Database
+
 from nlp.thresholds import sentiment_score, sentiment_magnitude
+from sinks.database import Database
+
+from datetime import datetime
 import logging
 
 
@@ -17,32 +20,31 @@ class SentimentAnalyser(Database):
         for doc in documents:
             id = doc.id
             doc_dict = doc.to_dict()
-            title = doc_dict.get("title")
-            document = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=title)
+            if 'score_timestamp' in doc_dict:
+                continue
+            document = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=doc_dict.get("title"))
             annotations = self._client.analyze_sentiment(document=document)
             self.update_doc_from_firestore(
                 collection,
                 id,
-                "negative_sentiment",
-                self.identify_negative_entities(annotations.sentences)
+                self.flag_negative_entities(annotations)
             )
             sentences_analysis.append(annotations.sentences)
         logging.info("performed sentiment analysis on %d documents" % (len(sentences_analysis)))
         return sentences_analysis
 
-    def display_annotations(self, title: str, annotations):
-        """Print the output of the sentiment analysis"""
+    def flag_negative_entities(self, annotations: dict) -> dict:
+        negative_flag = False
+        negative_count = 0
+        parameters = {
+            'sentiment_score': round(annotations.document_sentiment.score, 3),
+            'sentiment_magnitude': round(annotations.document_sentiment.magnitude, 3)
+        }
         for sentence in annotations.sentences:
-            print(f"""
-                {"=-" * 10}
-                {sentence.text.content} =>
-                sentiment: {sentence.sentiment.score},
-                magnitude: {annotations.sentiment.magnitude}
-            """)
-
-    def identify_negative_entities(self, sentences: list) -> bool:
-        negative_entity_flag = False
-        for sentence in sentences:
             if sentiment_score(sentence) and sentiment_magnitude(sentence):
-                negative_entity_flag = True
-        return negative_entity_flag
+                negative_flag = True
+                negative_count += 1
+        parameters['negative_flag'] = negative_flag
+        parameters['negative_sentences_count'] = negative_count
+        parameters['score_timestamp'] = datetime.now().isoformat()
+        return parameters
