@@ -2,7 +2,10 @@ from google.cloud import language
 from google.cloud.language import types, enums
 
 from nlp.thresholds import sentiment_score, sentiment_magnitude
+
 from sinks.database import Database
+
+from utils import fields
 
 from datetime import datetime
 import logging
@@ -20,7 +23,7 @@ class SentimentAnalyser(Database):
         for doc in documents:
             id = doc.id
             doc_dict = doc.to_dict()
-            if 'score_timestamp' in doc_dict:
+            if fields.SCORE_TIMESTAMP in doc_dict:
                 continue
             document = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=doc_dict.get("title"))
             annotations = self._client.analyze_sentiment(document=document)
@@ -37,14 +40,14 @@ class SentimentAnalyser(Database):
         negative_flag = False
         negative_count = 0
         parameters = {
-            'sentiment_score': round(annotations.document_sentiment.score, 3),
-            'sentiment_magnitude': round(annotations.document_sentiment.magnitude, 3)
+            fields.SENTIMENT_SCORE: round(annotations.document_sentiment.score, 4),
+            fields.SENTIMENT_MAGNITUDE: round(annotations.document_sentiment.magnitude, 4)
         }
         for sentence in annotations.sentences:
             if sentiment_score(sentence) and sentiment_magnitude(sentence):
                 negative_flag = True
                 negative_count += 1
-        parameters['negative_flag'] = negative_flag
-        parameters['negative_sentences_count'] = negative_count
-        parameters['score_timestamp'] = datetime.now().isoformat()
+        parameters[fields.NEGATIVE_FLAG] = negative_flag
+        parameters[fields.NEGATIVE_SENTENCES_COUNT] = negative_count
+        parameters[fields.SCORE_TIMESTAMP] = datetime.now().isoformat()
         return parameters

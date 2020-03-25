@@ -1,6 +1,6 @@
 import os
 from sinks.database import Database
-from sinks import schema
+from utils import schema
 from praw import Reddit
 
 

@@ -1,4 +1,4 @@
-from nlp import constants
+from utils import constants
 
 
 def sentiment_score(entity) -> bool:
