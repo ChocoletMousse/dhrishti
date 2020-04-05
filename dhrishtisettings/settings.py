@@ -71,7 +71,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dhrishtisettings.wsgi.application'
 
 
-# Database
+# FirestoreReddit
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {

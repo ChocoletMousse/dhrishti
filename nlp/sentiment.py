@@ -3,7 +3,7 @@ from google.cloud.language import types, enums
 
 from nlp.thresholds import sentiment_score, sentiment_magnitude
 
-from sinks.database import Database
+from sinks.database import FirestoreReddit
 
 from utils import fields
 
@@ -11,7 +11,7 @@ from datetime import datetime
 import logging
 
 
-class SentimentAnalyser(Database):
+class SentimentAnalyser(FirestoreReddit):
 
     def __init__(self):
         super().__init__()
@@ -27,7 +27,7 @@ class SentimentAnalyser(Database):
                 continue
             document = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=doc_dict.get("title"))
             annotations = self._client.analyze_sentiment(document=document)
-            self.update_doc_from_firestore(
+            self.update_submission(
                 collection,
                 id,
                 self.flag_negative_entities(annotations)

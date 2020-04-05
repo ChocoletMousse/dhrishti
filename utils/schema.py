@@ -1,4 +1,4 @@
-from praw.models import Submission
+from praw.models import Submission, Comment
 from datetime import datetime
 
 
@@ -11,5 +11,15 @@ def reddit_submission_schema(submission: Submission) -> dict:
         "upvote_ratio": submission.upvote_ratio,
         "num_comments": submission.num_comments,
         "url": submission.url,
+        "landing_timestamp": datetime.now().isoformat()
+    }
+
+
+def reddit_comment_schema(comment: Comment) -> dict:
+    return {
+        "comment": comment.body,
+        "score": comment.score,
+        "parent_id": comment.parent_id,
+        "created_utc": comment.created_utc,
         "landing_timestamp": datetime.now().isoformat()
     }

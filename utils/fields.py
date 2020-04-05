@@ -1,4 +1,4 @@
-# Firestore document columns
+# FirestoreReddit document columns
 NEGATIVE_FLAG = 'negative_flag'
 NEGATIVE_SENTENCES_COUNT = 'negative_sentences_count'
 SCORE_TIMESTAMP = 'score_timestamp'
