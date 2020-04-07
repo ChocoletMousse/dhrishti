@@ -17,7 +17,7 @@ class SentimentAnalyser(FirestoreReddit):
         super().__init__()
         self._client = language.LanguageServiceClient()
 
-    def analyse_titles(self, collection: str, documents: list) -> list:
+    def analyse_text(self, collection: str, documents: list, target_attr: str) -> list:
         """Go through each document in a collection and analyse the sentiment."""
         sentences_analysis = []
         for doc in documents:
@@ -25,9 +25,10 @@ class SentimentAnalyser(FirestoreReddit):
             doc_dict = doc.to_dict()
             if fields.SCORE_TIMESTAMP in doc_dict:
                 continue
-            document = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=doc_dict.get("title"))
+            document = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=doc_dict.get(target_attr))
             annotations = self._client.analyze_sentiment(document=document)
-            self.update_submission(
+            self.update_documents(
+                target_attr,
                 collection,
                 id,
                 self.flag_negative_entities(annotations)

@@ -7,29 +7,29 @@
         <!-- Bootstrap CSS-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-        <title>data</title>
+        <title>submission sentiment</title>
     </head>
     
     <body>
     {% if documents %}
     {% for document in documents %}
-    {% with doc=document.to_dict %}
+    {% with submission=document.to_dict %}
     {% if forloop.first %}
     <div class="row">
     {% endif %}
         <div class="col-sm-6">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                <h5 class="card-title">{{ doc.title }}</h5>
-                {% if doc.score_timestamp %}
-                <h6 class="card-subtitle mb-2 text-muted">{{ doc.negative_flag }}</h6>
-                <p class="card-text">Sentiment score: {{ doc.sentiment_score }}</p>
-                <p class="card-text">Sentiment magnitude: {{ doc.sentiment_magnitude }}</p>
+                <h5 class="card-title">{{ submission.title }}</h5>
+                {% if submission.score_timestamp %}
+                <h6 class="card-subtitle mb-2 text-muted">{{ submission.negative_flag }}</h6>
+                <p class="card-text">Sentiment score: {{ submission.sentiment_score }}</p>
+                <p class="card-text">Sentiment magnitude: {{ submission.sentiment_magnitude }}</p>
                 {% else %}
                 <p class="card-text">NOT SCORED YET</p>
                 {% endif %}
-                <p class="card-text">Comments: {{ doc.num_comments }}</p>
-                <a href={{ doc.url }} class="card-link">{{ doc.url }}</a>
+                <p class="card-text">Comments: {{ submission.num_comments }}</p>
+                <a href={{ submission.url }} class="card-link">{{ submission.url }}</a>
                 </div>
             </div>
         </div>
