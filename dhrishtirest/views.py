@@ -27,13 +27,13 @@ def load_subreddit_latest(request, subreddit: str, limit: int):
 
 
 @require_http_methods(["GET"])
-def view_subreddit_data(request, subreddit: str, limit: int):
+def view_submission_data(request, subreddit: str, limit: int):
     documents = reddit_connector.get_submissions(subreddit, limit)
     context = {
         'subreddit': subreddit,
         'documents': documents
     }
-    return render(request, "dhrishtirest/results/subreddits.html", context)
+    return render(request, "dhrishtirest/subreddits.html", context)
 
 
 @require_http_methods(["GET"])
@@ -47,8 +47,8 @@ def analyse_text(request, subreddit: str, limit: int):
 
 
 @require_http_methods(["GET"])
-def load_comments(request, submission_id: str):
-    reddit_connector.fetch_best_comments(submission_id)
+def load_comments(request, submission_id: str, limit: int):
+    reddit_connector.fetch_best_comments(submission_id, limit)
     return HttpResponse("fetched comments.")
 
 
@@ -60,16 +60,15 @@ def view_comments_data(request, submission_id: str, limit: int):
         'submission_id': submission_id,
         'documents': documents
     }
-    return render(request, '[CREATE NEW HTML PAGE FOR COMMENTS]', context)
+    return render(request, "dhrishtirest/comments.html", context)
 
 
 # TODO make sure this is working
 @require_http_methods(["GET"])
 def analyse_comments(request, submission_id: str, limit: int):
     documents = reddit_connector.get_comments(submission_id, limit)
-    sentiment.analyse_text(submission_id, documents, "comment")
-    # context = {
-    #     'sentences_analysis': sentences_analysis
-    # }
-    # return render(request, "dhrishtirest/analysis.html", context)
-    return HttpResponse("scored comments.")
+    sentences_analysis = sentiment.analyse_text(submission_id, documents, "comment")
+    context = {
+        'sentences_analysis': sentences_analysis
+    }
+    return render(request, "dhrishtirest/analysis.html", context)

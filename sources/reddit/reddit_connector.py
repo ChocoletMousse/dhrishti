@@ -42,13 +42,13 @@ class RedditConnector(FirestoreReddit):
             item = schema.reddit_submission_schema(submission)
             self.write_submission(subreddit_name, submission.id, item)
 
-    def fetch_best_comments(self, submission_id: str):
+    def fetch_best_comments(self, submission_id: str, limit: int):
         """Write the first level comments on a submission to FirestoreReddit."""
         logging.info(f"reddit connector: fetching comments for subreddit id {submission_id}")
         submission_obj = self.reddit_instance.submission(submission_id)
         comment_count = 0
         for comment in submission_obj.comments:
-            if comment_count == constants.MAX_COMMENTS:
+            if comment_count == limit:
                 break
             if len(comment.body) > constants.MAX_COMMENT_LENGTH:
                 continue
