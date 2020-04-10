@@ -52,7 +52,6 @@ def load_comments(request, submission_id: str, limit: int):
     return HttpResponse("fetched comments.")
 
 
-# TODO create HTML page
 @require_http_methods(["GET"])
 def view_comments_data(request, submission_id: str, limit: int):
     documents = reddit_connector.get_comments(submission_id, limit)
@@ -63,7 +62,6 @@ def view_comments_data(request, submission_id: str, limit: int):
     return render(request, "dhrishtirest/comments.html", context)
 
 
-# TODO make sure this is working
 @require_http_methods(["GET"])
 def analyse_comments(request, submission_id: str, limit: int):
     documents = reddit_connector.get_comments(submission_id, limit)

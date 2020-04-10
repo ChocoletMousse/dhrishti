@@ -38,6 +38,7 @@ class SentimentAnalyser(FirestoreReddit):
         return sentences_analysis
 
     def flag_negative_entities(self, annotations: dict) -> dict:
+        """Returns a dict containing sentiment analysis values."""
         negative_flag = False
         negative_count = 0
         parameters = {

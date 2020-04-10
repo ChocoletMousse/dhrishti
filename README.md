@@ -26,6 +26,10 @@
 - Decide how to write to database
 
 ## _log_:
-- [ ] create a view from the index to fetch results from reddit.
-- [ ] give a score to a title based
-- [ ] determine a threshold which determines whether there should be further delving.
+- [x] create a view from the index to fetch results from reddit
+- [x] give a score to a title based
+- [x] determine a threshold which determines whether there should be further delving
+- [ ] delve into CommentForests and retrieve significant threads
+- [ ] Run analysis on comments and identify key words and phrases
+- [ ] create links to traverse between different html pages
+

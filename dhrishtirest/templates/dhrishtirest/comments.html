@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <!-- Bootstrap CSS-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <title>comments sentiment</title>
+    </head>
+
+    <body>
+    {% if documents %}
+    {% for document in documents %}
+    {% with comment=document.to_dict %}
+    {% if forloop.first %}
+    <div class="row">
+    {% endif %}
+        <div class="col-sm-6">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                <p class="card-text"><i>{{ comment.comment }}</i></p>
+                {% if comment.score_timestamp %}
+                <h6 class="card-subtitle mb-2 text-muted">{{ comment.negative_flag }}</h6>
+                <p class="card-text">Sentiment score: {{ comment.sentiment_score }}</p>
+                <p class="card-text">Sentiment magnitude: {{ comment.sentiment_magnitude }}</p>
+                {% else %}
+                <p class="card-text">NOT SCORED YET</p>
+                {% endif %}
+                <p class="card-text">Comments: {{ comment.score }}</p>
+                </div>
+            </div>
+        </div>
+    {% if forloop.count|divisibleby:4 and not forloop.last %}
+    </div>
+    <div class="row">
+    {% endif %}
+    {% if forloop.last %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% endfor %}
+    {% else %}
+    <p>No results were retrieved for the  /r/{{ submission_id }}.</p>
+    {% endif %}
+    </body>
+</html>

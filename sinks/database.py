@@ -39,11 +39,11 @@ class FirestoreReddit():
             doc.reference.delete()
         logging.info(f"Collection {collection} cleared.")
 
-    def write_comment(self, subreddit: str, document_id: str, item: dict):
+    def write_comment(self, submission_id: str, document_id: str, item: dict):
         """Save the comment from a submission."""
-        logging.info(f"writing {document_id} to collection {subreddit}")
+        logging.info(f"writing {document_id} to collection {submission_id}")
         comments_ref = self.db.collection(self.comments_ref).document(self.title)
-        comments_ref.collection(subreddit).document(document_id).set(item)
+        comments_ref.collection(submission_id).document(document_id).set(item)
 
     def get_comments(self, submission_id: str, limit: int) -> list:
         """Retrieves the specified number of submissions from a given subreddit."""
