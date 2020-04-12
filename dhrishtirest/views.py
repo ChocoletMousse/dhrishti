@@ -70,3 +70,9 @@ def analyse_comments(request, submission_id: str, limit: int):
         'sentences_analysis': sentences_analysis
     }
     return render(request, "dhrishtirest/analysis.html", context)
+
+
+@require_http_methods(["GET"])
+def load_replies(request, submission_id: str, limit: int):
+    replies = reddit_connector.fetch_best_responses(submission_id, limit)
+    return HttpResponse("fetched replies %s" % (str(replies)))

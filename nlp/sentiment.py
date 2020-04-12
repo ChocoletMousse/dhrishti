@@ -1,3 +1,4 @@
+
 from google.cloud import language
 from google.cloud.language import types, enums
 
@@ -22,11 +23,7 @@ class SentimentAnalyser(FirestoreReddit):
         sentences_analysis = []
         for doc in documents:
             id = doc.id
-            doc_dict = doc.to_dict()
-            if fields.SCORE_TIMESTAMP in doc_dict:
-                continue
-            document = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=doc_dict.get(target_attr))
-            annotations = self._client.analyze_sentiment(document=document)
+            annotations = self.perform_analysis(doc.to_dict(), target_attr)
             self.update_documents(
                 target_attr,
                 collection,
@@ -36,6 +33,11 @@ class SentimentAnalyser(FirestoreReddit):
             sentences_analysis.append(annotations.sentences)
         logging.info("performed sentiment analysis on %d documents" % (len(sentences_analysis)))
         return sentences_analysis
+
+    def perform_analysis(self, document: dict, target_attr: str) -> list:
+        doc = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=document.get(target_attr))
+        annotations = self._client.analyze_sentiment(document=doc)
+        return annotations
 
     def flag_negative_entities(self, annotations: dict) -> dict:
         """Returns a dict containing sentiment analysis values."""

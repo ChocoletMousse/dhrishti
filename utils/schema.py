@@ -21,5 +21,6 @@ def reddit_comment_schema(comment: Comment) -> dict:
         "score": comment.score,
         "parent_id": comment.parent_id,
         "created_utc": comment.created_utc,
+        "replies": [],
         "landing_timestamp": datetime.now().isoformat()
     }

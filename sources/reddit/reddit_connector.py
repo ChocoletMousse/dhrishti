@@ -1,6 +1,6 @@
 import os
 from sinks.database import FirestoreReddit
-from utils import constants, schema
+from utils import constants, schema, fields
 from praw import Reddit
 from praw.models import Comment
 import logging
@@ -27,7 +27,7 @@ class RedditConnector(FirestoreReddit):
 
     def incorrect_comment_length(self, comment: Comment) -> bool:
         too_long = len(comment.body) > constants.MAX_COMMENT_LENGTH
-        too_short = len(comment.body) > constants.MIN_COMMENT_LENGTH
+        too_short = len(comment.body) < constants.MIN_COMMENT_LENGTH
         return too_long or too_short
 
     def fetch_top_posts(self, subreddit_name: str, limit: int):
@@ -64,7 +64,18 @@ class RedditConnector(FirestoreReddit):
             self.write_comment(submission_id, comment.id, item)
             comment_count += 1
 
-    # def fetch_replies(self, submission_id: str, comment_id: str):
-    #     comment_obj = self._reddit_instance.comment(comment_id)
-    #     replies = comment.replies()
-    #     replies.replace_more()
+    def fetch_best_responses(self, submission_id: str, limit: int):
+        comments_collection = self.db.collection(self.comments_ref)\
+            .document(self.placeholder)\
+            .collection(submission_id)
+        comments = comments_collection.where(fields.NEGATIVE_FLAG, '==', True).stream()
+        ids = [comment.id for comment in comments]
+        for id in ids:
+            comment = self._reddit_instance.comment(id)
+            comment.refresh()
+            replies = comment.replies
+            replies.replace_more(limit=3)
+            replies_dict = [schema.reddit_comment_schema(reply) for reply in replies]
+            best_replies = sorted(replies_dict, key=lambda x: x['score'])[:limit]
+            comments_collection.document(id).update({'replies': best_replies})
+            return best_replies
