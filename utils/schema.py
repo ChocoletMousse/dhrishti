@@ -24,3 +24,14 @@ def reddit_comment_schema(comment: Comment) -> dict:
         "replies": [],
         "landing_timestamp": datetime.now().isoformat()
     }
+
+
+def reddit_reply_schema(reply: Comment) -> dict:
+    return {
+        "id": reply.id,
+        "comment": reply.body,
+        "score": reply.score,
+        "created_utc": reply.created_utc,
+        "landing_timestamp": datetime.now().isoformat(),
+        "replies": []
+    }

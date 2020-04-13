@@ -75,7 +75,9 @@ class RedditConnector(FirestoreReddit):
             comment.refresh()
             replies = comment.replies
             replies.replace_more(limit=3)
-            replies_dict = [schema.reddit_comment_schema(reply) for reply in replies]
+            replies_dict = [
+                schema.reddit_reply_schema(reply) for reply in replies if not self.incorrect_comment_length(reply)
+            ]
             best_replies = sorted(replies_dict, key=lambda x: x['score'])[:limit]
             comments_collection.document(id).update({'replies': best_replies})
             return best_replies

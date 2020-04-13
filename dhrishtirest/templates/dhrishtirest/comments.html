@@ -11,38 +11,40 @@
     </head>
 
     <body>
-    {% if documents %}
     {% for document in documents %}
     {% with comment=document.to_dict %}
-    {% if forloop.first %}
     <div class="row">
-    {% endif %}
-        <div class="col-sm-6">
-            <div class="card" style="width: 18rem;">
+        <div class="col-sm-3">
+            {% if comment.negative_flag %}
+            <div class="card text-white bg-danger mb-3" style="width: 18rem;">
+            {% else %}
+            <div class="card text-white bg-success mb-3"" style="width: 18rem;">
+            {% endif %}
                 <div class="card-body">
-                <p class="card-text"><i>{{ comment.comment }}</i></p>
-                {% if comment.score_timestamp %}
-                <h6 class="card-subtitle mb-2 text-muted">{{ comment.negative_flag }}</h6>
-                <p class="card-text">Sentiment score: {{ comment.sentiment_score }}</p>
-                <p class="card-text">Sentiment magnitude: {{ comment.sentiment_magnitude }}</p>
-                {% else %}
-                <p class="card-text">NOT SCORED YET</p>
-                {% endif %}
-                <p class="card-text">Comments: {{ comment.score }}</p>
+                    <p class="card-text"><i>{{ comment.comment }}</i></p>
+                    {% if comment.score_timestamp %}
+                    <p class="card-text">Sentiment score: {{ comment.sentiment_score }}</p>
+                    <p class="card-text">Sentiment magnitude: {{ comment.sentiment_magnitude }}</p>
+                    {% else %}
+                    <p class="card-text">NOT SCORED YET</p>
+                    {% endif %}
+                    <p class="card-text">Comments: {{ comment.score }}</p>
                 </div>
             </div>
         </div>
-    {% if forloop.count|divisibleby:4 and not forloop.last %}
+        {% for reply in comment.replies %}
+            <div class="col-sm-3 ">
+                <div class="card" style="width: 20rem;">
+                    <div class="card-body">
+                    <p class="card-text"><i>{{ reply.comment }}</i></p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    <div class="row">
-    {% endif %}
-    {% if forloop.last %}
-    </div>
-    {% endif %}
     {% endwith %}
-    {% endfor %}
-    {% else %}
+    {% empty %}
     <p>No results were retrieved for the  /r/{{ submission_id }}.</p>
-    {% endif %}
+    {% endfor %}
     </body>
 </html>
