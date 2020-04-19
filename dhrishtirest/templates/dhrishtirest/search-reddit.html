@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <title>search</title>
+</head>
+<body>
+    {% include "dhrishtirest/nav.html" %}
+    <h1>Search across reddit for insights on a chosen topic.</h1>
+    <br>
+    <form action="{% url 'load-subreddit-top' %}" method="POST">{% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6"">
+                <label>Search a subreddit.</label>
+                {{ search_form }}
+                <!-- <input class="form-control" type="text" name="subreddit" placeholder="e.g. 'worldnews'">
+                <input class="form-control" type="text" name="limit" placeholder="e.g. 10">
+                <br> -->
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+
+</body>

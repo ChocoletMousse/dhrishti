@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
+from dhrishtirest.forms import SearchForm
 from sources.reddit.reddit_connector import RedditConnector
 from nlp.sentiment import SentimentAnalyser
 
@@ -14,14 +15,31 @@ def index(request):
     return render(request, "dhrishtirest/index.html")
 
 
-@require_http_methods(["GET"])
-def load_subreddit_top(request, subreddit: str, limit: int):
-    reddit_connector.fetch_top_posts(subreddit, limit)
-    return HttpResponse("Gathered data from the top %d results from /r/%s" % (limit, subreddit))
+@require_http_methods(['GET'])
+def search(request):
+    search_form = SearchForm()
+    context = {
+        'search_form': search_form
+    }
+    return render(request, "dhrishtirest/search-reddit.html", context)
 
 
-@require_http_methods(["GET"])
-def load_subreddit_latest(request, subreddit: str, limit: int):
+@require_http_methods(["POST"])
+def load_subreddit_top(request):
+    if not request.POST:
+        return HttpResponse('there is no endpoint for a GET request.')
+    form = SearchForm(request.POST)
+    if form.is_valid():
+        subreddit = form.cleaned_data['subreddit']
+        limit = form.cleaned_data['limit']
+        reddit_connector.fetch_top_posts(subreddit, limit)
+        return HttpResponse("Gathered the top %d results from /r/%s" % (limit, subreddit))
+
+
+@require_http_methods(["POST"])
+def load_subreddit_latest(request):
+    subreddit = request.POST['subreddit']
+    limit = request.POST['limit']
     reddit_connector.fetch_latest_posts(subreddit, limit)
     return HttpResponse("Gathered data from the latest %d results from /r/%s" % (limit, subreddit))
 
