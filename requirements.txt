@@ -2,5 +2,6 @@ flake8
 python-dotenv
 praw
 django
+django-crispy-forms
 google-cloud-firestore
 google-cloud-language

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load crispy_forms_tags %}
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -11,17 +12,15 @@
 </head>
 <body>
     {% include "dhrishtirest/nav.html" %}
-    <h1>Search across reddit for insights on a chosen topic.</h1>
-    <br>
-    <form action="{% url 'load-subreddit-top' %}" method="POST">{% csrf_token %}
-        <div class="form-row">
-            <div class="form-group col-md-6"">
-                <label>Search a subreddit.</label>
-                {{ search_form }}
-                <!-- <input class="form-control" type="text" name="subreddit" placeholder="e.g. 'worldnews'">
-                <input class="form-control" type="text" name="limit" placeholder="e.g. 10">
-                <br> -->
-                <button type="submit" class="btn btn-primary">Search</button>
+    <div class="container">
+        <h1>Search subreddits for insights on hot topics.</h1>
+        <br>
+        <form action="{% url 'load-reddit-submissions' %}" method="POST">{% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6"">
+                    {{ search_form|crispy }}
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
             </div>
         </div>
     </form>

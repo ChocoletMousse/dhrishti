@@ -4,8 +4,8 @@ from dhrishtirest import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("search-reddit", views.search, name="search-reddit"),
-    path("top/subreddit", views.load_subreddit_top, name="load-subreddit-top"),
-    path("latest/subreddit", views.load_subreddit_latest, name="load-subreddit-latest"),
+    path("subreddit", views.load_subreddit_top, name="load-reddit-submissions"),
+    # path("latest/subreddit", views.load_subreddit_latest, name="load-subreddit-latest"),
     path("view/submissions/<str:subreddit>/<int:limit>", views.view_submission_data, name="view-saved-submissions"),
     path("analyse/submissions/<str:subreddit>/<int:limit>", views.analyse_text, name="analyse-submission-titles"),
     path("comments/<str:submission_id>/<int:limit>", views.load_comments, name="load-submission-comments"),

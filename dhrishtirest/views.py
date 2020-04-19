@@ -32,16 +32,20 @@ def load_subreddit_top(request):
     if form.is_valid():
         subreddit = form.cleaned_data['subreddit']
         limit = form.cleaned_data['limit']
-        reddit_connector.fetch_top_posts(subreddit, limit)
-        return HttpResponse("Gathered the top %d results from /r/%s" % (limit, subreddit))
+        order = form.cleaned_data['order']
+        if order == 'top':
+            reddit_connector.fetch_top_posts(subreddit, limit)
+            return HttpResponse("Gathered the top %d results from /r/%s" % (limit, subreddit))
+        if order == 'latest':
+            reddit_connector.fetch_latest_posts(subreddit, limit)
+            return HttpResponse("Gathered data from the latest %d results from /r/%s" % (limit, subreddit))
 
-
-@require_http_methods(["POST"])
-def load_subreddit_latest(request):
-    subreddit = request.POST['subreddit']
-    limit = request.POST['limit']
-    reddit_connector.fetch_latest_posts(subreddit, limit)
-    return HttpResponse("Gathered data from the latest %d results from /r/%s" % (limit, subreddit))
+# @require_http_methods(["POST"])
+# def load_subreddit_latest(request):
+#     subreddit = request.POST['subreddit']
+#     limit = request.POST['limit']
+#     reddit_connector.fetch_latest_posts(subreddit, limit)
+#     return HttpResponse("Gathered data from the latest %d results from /r/%s" % (limit, subreddit))
 
 
 @require_http_methods(["GET"])
