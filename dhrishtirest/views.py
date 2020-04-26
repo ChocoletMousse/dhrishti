@@ -25,7 +25,7 @@ def search(request):
 
 
 @require_http_methods(["POST"])
-def load_subreddit_top(request):
+def load_subreddit_posts(request):
     if not request.POST:
         return HttpResponse('there is no endpoint for a GET request.')
     form = SearchForm(request.POST)
@@ -40,12 +40,15 @@ def load_subreddit_top(request):
             reddit_connector.fetch_latest_posts(subreddit, limit)
             return HttpResponse("Gathered data from the latest %d results from /r/%s" % (limit, subreddit))
 
-# @require_http_methods(["POST"])
-# def load_subreddit_latest(request):
-#     subreddit = request.POST['subreddit']
-#     limit = request.POST['limit']
-#     reddit_connector.fetch_latest_posts(subreddit, limit)
-#     return HttpResponse("Gathered data from the latest %d results from /r/%s" % (limit, subreddit))
+
+@require_http_methods(["GET"])
+def get_subreddit_data(request):
+    return HttpResponse('still needs work lol')
+
+
+@require_http_methods(["GET"])
+def get_dhrishti_data(request):
+    return HttpResponse('still needs work lmao')
 
 
 @require_http_methods(["GET"])

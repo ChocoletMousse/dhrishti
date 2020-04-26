@@ -1,19 +1,13 @@
 <!DOCTYPE html>
 {% load crispy_forms_tags %}
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    
     <title>search</title>
 </head>
 <body>
     {% include "dhrishtirest/nav.html" %}
+    <span class="border">
     <div class="container">
-        <h1>Search subreddits for insights on hot topics.</h1>
+        <h1>Search subreddits for insights on discussions.</h1>
         <br>
         <form action="{% url 'load-reddit-submissions' %}" method="POST">{% csrf_token %}
             <div class="form-row">
@@ -22,7 +16,6 @@
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </div>
-        </div>
-    </form>
-
+    </div>
+    </span>
 </body>
