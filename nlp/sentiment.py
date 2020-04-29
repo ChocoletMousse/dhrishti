@@ -1,14 +1,10 @@
 
 from google.cloud import language
 from google.cloud.language import types, enums
-
+from google.cloud.firestore import SERVER_TIMESTAMP
 from nlp.thresholds import sentiment_score, sentiment_magnitude
-
 from sinks.database import FirestoreReddit
-
 from utils import fields
-
-from datetime import datetime
 import logging
 
 
@@ -53,5 +49,5 @@ class SentimentAnalyser(FirestoreReddit):
                 negative_count += 1
         parameters[fields.NEGATIVE_FLAG] = negative_flag
         parameters[fields.NEGATIVE_SENTENCES_COUNT] = negative_count
-        parameters[fields.SCORE_TIMESTAMP] = datetime.now().isoformat()
+        parameters[fields.SCORE_TIMESTAMP] = SERVER_TIMESTAMP
         return parameters

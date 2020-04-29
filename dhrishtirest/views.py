@@ -24,6 +24,8 @@ def search(request):
     return render(request, "dhrishtirest/search-reddit.html", context)
 
 
+# TODO replace both responses with html page.
+# TODO automatically retrieve comments and responses.
 @require_http_methods(["POST"])
 def load_subreddit_posts(request):
     if not request.POST:
@@ -42,20 +44,14 @@ def load_subreddit_posts(request):
 
 
 @require_http_methods(["GET"])
-def get_subreddit_data(request):
-    return HttpResponse('still needs work lol')
-
-
-@require_http_methods(["GET"])
 def get_dhrishti_data(request):
     return HttpResponse('still needs work lmao')
 
 
 @require_http_methods(["GET"])
-def view_submission_data(request, subreddit: str, limit: int):
-    documents = reddit_connector.get_submissions(subreddit, limit)
+def get_submission_data(request, limit: int = 10):
+    documents = reddit_connector.get_submissions(limit)
     context = {
-        'subreddit': subreddit,
         'documents': documents
     }
     return render(request, "dhrishtirest/subreddits.html", context)
@@ -78,10 +74,9 @@ def load_comments(request, submission_id: str, limit: int):
 
 
 @require_http_methods(["GET"])
-def view_comments_data(request, submission_id: str, limit: int):
-    documents = reddit_connector.get_comments(submission_id, limit)
+def get_comments_data(request, limit: int):
+    documents = reddit_connector.get_comments(limit)
     context = {
-        'submission_id': submission_id,
         'documents': documents
     }
     return render(request, "dhrishtirest/comments.html", context)

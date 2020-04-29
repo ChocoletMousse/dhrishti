@@ -1,8 +1,8 @@
-<html>
+<!DOCTYPE html>
+{% include "dhrishtirest/nav.html" %}
     <head>
         <title>comments sentiment</title>
     </head>
-
     <body>
     {% for document in documents %}
     {% with comment=document.to_dict %}
@@ -15,6 +15,7 @@
             {% endif %}
                 <div class="card-body">
                     <p class="card-text"><i>{{ comment.comment }}</i></p>
+                    <p class="card-text"><b>{{ comment.submission }}</b></p>
                     {% if comment.score_timestamp %}
                     <p class="card-text">Sentiment score: {{ comment.sentiment_score }}</p>
                     <p class="card-text">Sentiment magnitude: {{ comment.sentiment_magnitude }}</p>
@@ -37,7 +38,7 @@
     </div>
     {% endwith %}
     {% empty %}
-    <p>No results were retrieved for the  /r/{{ submission_id }}.</p>
+    <p>No results were retrieved.</p>
     {% endfor %}
     </body>
 </html>

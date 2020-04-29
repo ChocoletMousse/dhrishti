@@ -9,10 +9,6 @@ import logging
 class RedditConnector(FirestoreReddit):
     """Class for retrieving Reddit data."""
 
-    client_id = os.getenv("REDDIT_CLIENT_ID")
-    client_secret = os.getenv("REDDIT_SECRET")
-    instance = os.getenv("REDDIT_APPLICATION")
-
     def __init__(self):
         super().__init__()
         self._authenticate()
@@ -20,9 +16,9 @@ class RedditConnector(FirestoreReddit):
     def _authenticate(self):
         logging.info("reddit connector: authenticating reddit connector")
         self._reddit_instance = Reddit(
-            client_id=self.client_id,
-            client_secret=self.client_secret,
-            user_agent=self.instance
+            client_id=os.getenv("REDDIT_CLIENT_ID"),
+            client_secret=os.getenv("REDDIT_SECRET"),
+            user_agent=os.getenv("REDDIT_APPLICATION")
         )
 
     def incorrect_comment_length(self, comment: Comment) -> bool:
@@ -36,8 +32,8 @@ class RedditConnector(FirestoreReddit):
         subreddit_obj = self._reddit_instance.subreddit(subreddit_name)
         submissions = subreddit_obj.top(limit=limit)
         for submission in submissions:
-            item = schema.reddit_submission_schema(submission)
-            self.write_submission(subreddit_name, submission.id, item)
+            item = schema.reddit_submission_schema(submission, subreddit_name)
+            self.write_submission(self.subreddit_ref, submission.id, item)
 
     def fetch_latest_posts(self, subreddit_name: str, limit: int):
         """Write the retrieved subreddit submissions to FirestoreReddit."""
@@ -45,8 +41,8 @@ class RedditConnector(FirestoreReddit):
         subreddit_obj = self._reddit_instance.subreddit(subreddit_name)
         submissions = subreddit_obj.new(limit=limit)
         for submission in submissions:
-            item = schema.reddit_submission_schema(submission)
-            self.write_submission(subreddit_name, submission.id, item)
+            item = schema.reddit_submission_schema(submission, subreddit_name)
+            self.write_submission(self.subreddit_ref, submission.id, item)
 
     def fetch_best_comments(self, submission_id: str, limit: int):
         """Write the first level comments on a submission to FirestoreReddit."""
@@ -60,8 +56,8 @@ class RedditConnector(FirestoreReddit):
                 break
             if self.incorrect_comment_length(comment):
                 continue
-            item = schema.reddit_comment_schema(comment)
-            self.write_comment(submission_id, comment.id, item)
+            item = schema.reddit_comment_schema(comment, submission_id)
+            self.write_comment(self.comments_ref, comment.id, item)
             comment_count += 1
 
     def fetch_best_responses(self, submission_id: str, limit: int):
