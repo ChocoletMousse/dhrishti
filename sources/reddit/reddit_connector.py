@@ -31,9 +31,12 @@ class RedditConnector(FirestoreReddit):
         logging.info(f"reddit connector: retreiving top {limit} posts from /r/{subreddit_name}")
         subreddit_obj = self._reddit_instance.subreddit(subreddit_name)
         submissions = subreddit_obj.top(limit=limit)
+        submission_list = []
         for submission in submissions:
             item = schema.reddit_submission_schema(submission, subreddit_name)
             self.write_submission(self.subreddit_ref, submission.id, item)
+            submission_list.append(submission)
+        return submission_list
 
     def fetch_latest_posts(self, subreddit_name: str, limit: int):
         """Write the retrieved subreddit submissions to FirestoreReddit."""
@@ -44,7 +47,30 @@ class RedditConnector(FirestoreReddit):
             item = schema.reddit_submission_schema(submission, subreddit_name)
             self.write_submission(self.subreddit_ref, submission.id, item)
 
-    def fetch_best_comments(self, submission_id: str, limit: int):
+    def fetch_comments(self, submissions: list, limit: int):
+        """Write the first level comments on a submission to FirestoreReddit."""
+        logging.info(f"reddit connector: fetching comments.")
+        comments = []
+        for submission in submissions:
+            comment_count = 0
+            submission.comment_sort = 'best'
+            submission.comments.replace_more(limit=5)
+            for comment in submission.comments:
+                if comment_count == limit:
+                    break
+                if self.incorrect_comment_length(comment):
+                    continue
+                item = schema.reddit_comment_schema(comment, submission.id)
+                self.write_comment(self.comments_ref, comment.id, item)
+                comment_count += 1
+                comments.append(comment)
+        return comments
+
+# ========================================================================================== #
+#                                   TO BE REPLACED                                           #
+# ========================================================================================== #
+
+    def fetch_best_comments(self, submission_id: list, limit: int):
         """Write the first level comments on a submission to FirestoreReddit."""
         logging.info(f"reddit connector: fetching comments for subreddit id {submission_id}")
         submission_obj = self._reddit_instance.submission(submission_id)

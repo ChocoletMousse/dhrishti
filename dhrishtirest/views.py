@@ -8,6 +8,7 @@ from nlp.sentiment import SentimentAnalyser
 
 reddit_connector = RedditConnector()
 sentiment = SentimentAnalyser()
+# TODO create a way navigate between submissions and comments
 
 
 # Create your views here.
@@ -33,14 +34,16 @@ def load_subreddit_posts(request):
     form = SearchForm(request.POST)
     if form.is_valid():
         subreddit = form.cleaned_data['subreddit']
-        limit = form.cleaned_data['limit']
+        sub_limit = form.cleaned_data['submissions_limit']
         order = form.cleaned_data['order']
         if order == 'top':
-            reddit_connector.fetch_top_posts(subreddit, limit)
-            return HttpResponse("Gathered the top %d results from /r/%s" % (limit, subreddit))
+            submissions = reddit_connector.fetch_top_posts(subreddit, sub_limit)
+            sentiment.analyse_submissions(submissions)
+            reddit_connector.fetch_comments(submissions, 10)
+            return HttpResponse("Gathered the top results from /r/%s" % (subreddit))
         if order == 'latest':
-            reddit_connector.fetch_latest_posts(subreddit, limit)
-            return HttpResponse("Gathered data from the latest %d results from /r/%s" % (limit, subreddit))
+            reddit_connector.fetch_latest_posts(subreddit, sub_limit)
+            return HttpResponse("Gathered the latest results from /r/%s" % (subreddit))
 
 
 @require_http_methods(["GET"])
@@ -59,12 +62,16 @@ def get_submission_data(request, limit: int = 10):
 
 @require_http_methods(["GET"])
 def analyse_text(request, subreddit: str, limit: int):
-    documents = reddit_connector.get_submissions(subreddit, limit)
+    documents = reddit_connector.get_submissions(limit)
     sentences_analysis = sentiment.analyse_text(subreddit, documents, "title")
     context = {
         'sentences_analysis': sentences_analysis
     }
     return render(request, "dhrishtirest/analysis.html", context)
+
+# ========================================================================================== #
+#                                   TO BE REPLACED                                           #
+# ========================================================================================== #
 
 
 @require_http_methods(["GET"])

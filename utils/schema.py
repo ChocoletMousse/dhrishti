@@ -2,12 +2,12 @@ from praw.models import Submission, Comment
 from datetime import datetime
 
 
-def reddit_submission_schema(submission: Submission, subreddit: str) -> dict:
+def reddit_submission_schema(submission: Submission, subreddit_id: str) -> dict:
     """Submission document structure for storage"""
     return {
         "name": submission.name,
         "type": "submission",
-        "subreddit": subreddit,
+        "subreddit_id": subreddit_id,
         "title": submission.title,
         "score": submission.score,
         "upvote_ratio": submission.upvote_ratio,
@@ -17,11 +17,11 @@ def reddit_submission_schema(submission: Submission, subreddit: str) -> dict:
     }
 
 
-def reddit_comment_schema(comment: Comment, submission: str) -> dict:
+def reddit_comment_schema(comment: Comment, submission_id: str) -> dict:
     return {
         "comment": comment.body,
         "type": "comment",
-        "submission": submission,
+        "submission_id": submission_id,
         "score": comment.score,
         "parent_id": comment.parent_id,
         "created_utc": comment.created_utc,

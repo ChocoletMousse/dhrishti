@@ -13,8 +13,20 @@ class SearchForm(forms.Form):
         max_length=40
     )
 
-    limit = forms.IntegerField(
-        label='limit',
+    submissions_limit = forms.IntegerField(
+        label='submissions per subreddit',
+        max_value=30,
+        min_value=5
+    )
+
+    comments_limit = forms.IntegerField(
+        label='comments per submission',
+        max_value=30,
+        min_value=5
+    )
+
+    responses_limit = forms.IntegerField(
+        label='responses per comment',
         max_value=30,
         min_value=5
     )
