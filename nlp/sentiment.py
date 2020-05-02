@@ -13,7 +13,7 @@ class SentimentAnalyser(FirestoreReddit):
         super().__init__()
         self._client = language.LanguageServiceClient()
 
-    def analyse_submissions(self, submissions: list) -> list:
+    def analyse_submissions(self, submissions: list):
         """Go through each document in a collection and analyse the sentiment."""
         for submission in submissions:
             annotations = self.perform_analysis(submission.title)
@@ -24,7 +24,7 @@ class SentimentAnalyser(FirestoreReddit):
             )
         logging.info("performed sentiment analysis on %d documents" % (len(submissions)))
 
-    def analyse_comments(self, comments: list) -> list:
+    def analyse_comments(self, comments: list):
         """Go through each document in a collection and analyse the sentiment."""
         for comment in comments:
             annotations = self.perform_analysis(comment.body)
@@ -34,6 +34,17 @@ class SentimentAnalyser(FirestoreReddit):
                 self.flag_negative_entities(annotations)
             )
         logging.info("performed sentiment analysis on %d documents" % (len(comments)))
+
+    def analyse_responses(self, responses: list):
+        """Go through each document in a collection and analyse the sentiment."""
+        for response in responses:
+            annotations = self.perform_analysis(response.body)
+            self.update_documents(
+                self.responses_ref,
+                response.id,
+                self.flag_negative_entities(annotations)
+            )
+        logging.info("performed sentiment analysis on %d documents" % (len(responses)))
 
     def perform_analysis(self, target_attr: str) -> list:
         doc = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=target_attr)

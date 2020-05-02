@@ -35,15 +35,19 @@ def load_subreddit_posts(request):
     if form.is_valid():
         subreddit = form.cleaned_data['subreddit']
         sub_limit = form.cleaned_data['submissions_limit']
+        comments_limit = form.cleaned_data['comments_limit']
+        responses_limit = form.cleaned_data['responses_limit']
         order = form.cleaned_data['order']
         if order == 'top':
             submissions = reddit_connector.fetch_top_posts(subreddit, sub_limit)
-            sentiment.analyse_submissions(submissions)
-            reddit_connector.fetch_comments(submissions, 10)
-            return HttpResponse("Gathered the top results from /r/%s" % (subreddit))
         if order == 'latest':
-            reddit_connector.fetch_latest_posts(subreddit, sub_limit)
-            return HttpResponse("Gathered the latest results from /r/%s" % (subreddit))
+            submissions = reddit_connector.fetch_latest_posts(subreddit, sub_limit)
+        sentiment.analyse_submissions(submissions)
+        comments = reddit_connector.fetch_comments(submissions, comments_limit)
+        sentiment.analyse_comments(comments)
+        responses = reddit_connector.fetch_responses(comments, responses_limit)
+        sentiment.analyse_responses(responses)
+        return HttpResponse("Gathered the top results from /r/%s" % (subreddit))
 
 
 @require_http_methods(["GET"])
