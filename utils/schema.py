@@ -1,5 +1,6 @@
 from praw.models import Submission, Comment
 from google.cloud.firestore import SERVER_TIMESTAMP
+from google.cloud.language_v1 import enums
 
 
 def reddit_submission_schema(submission: Submission, subreddit: str) -> dict:
@@ -39,4 +40,13 @@ def reddit_response_schema(response: Comment, comment_id) -> dict:
         "parent_id": response.parent_id,
         "created_utc": response.created_utc,
         "landing_timestamp": SERVER_TIMESTAMP
+    }
+
+
+def reddit_entity_schema(entity: list) -> dict:
+    return {
+        "entity_name": entity.name,
+        "entity_type": enums.Entity.Type(entity.type).name,
+        "salience": entity.salience,
+        "mentions_count": len(entity.mentions)
     }

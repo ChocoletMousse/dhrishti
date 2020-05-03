@@ -10,6 +10,7 @@ class FirestoreReddit():
         self.subreddit_ref = "subreddits"
         self.comments_ref = "comments"
         self.responses_ref = "responses"
+        self.entities_ref = "entities"
 
     def update_documents(self, collection: str, document_id: str, parameters: dict):
         """Fetch a document from firestore based on the domain."""
@@ -17,7 +18,7 @@ class FirestoreReddit():
         self.db.collection(collection).document(document_id).update(parameters)
 
     def write_submission(self, submission_id: str, item: dict):
-        """write a submission."""
+        """Write a submission from a subreddit."""
         logging.info(f"saving submission {submission_id}.")
         self.db.collection(self.subreddit_ref).document(submission_id).set(item)
 
@@ -35,7 +36,7 @@ class FirestoreReddit():
         return documents
 
     def write_comment(self, document_id: str, item: dict):
-        """Save the comment from a submission."""
+        """Write the comment from a submission."""
         logging.info(f"saving comment {document_id}.")
         self.db.collection(self.comments_ref).document(document_id).set(item)
 
@@ -69,3 +70,8 @@ class FirestoreReddit():
         logging.info(f"getting responses to comment {comment_id}")
         documents = self.db.collection(self.responses_ref).where("comment_id", "==", comment_id).stream()
         return documents
+
+    def write_entities(self, comment_id: str, item: dict):
+        """Writes the output of entity analysis on comments."""
+        logging.info(f"saving entities for comment {comment_id}.")
+        self.db.collection(self.entities_ref).document(comment_id).set(item)

@@ -47,6 +47,8 @@ def load_subreddit_posts(request):
         sentiment.analyse_comments(comments)
         responses = reddit_connector.fetch_responses(comments, responses_limit)
         sentiment.analyse_responses(responses)
+        all_comments = comments + responses
+        sentiment.analyse_entities(all_comments)
         return HttpResponse("Gathered the top results from /r/%s" % (subreddit))
 
 
