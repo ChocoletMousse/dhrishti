@@ -9,4 +9,5 @@ requirements:
 	pip install -r requirements.txt
 
 run: 
+	npm run dev
 	python manage.py runserver

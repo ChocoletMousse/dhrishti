@@ -48,6 +48,15 @@ class RedditConnector(FirestoreReddit):
             item = schema.reddit_submission_schema(submission)
             self.write_submission(subreddit_name, submission.id, item)
 
+    def fetch_controversial_posts(self, subreddit_name: str, limit: int):
+        """Write the retrieved subreddit submissions to FirestoreReddit."""
+        logging.info(f"reddit connector: retreiving latest {limit} posts from /r/{subreddit_name}")
+        subreddit_obj = self._reddit_instance.subreddit(subreddit_name)
+        submissions = subreddit_obj.controversial(limit=limit)
+        for submission in submissions:
+            item = schema.reddit_submission_schema(submission)
+            self.write_submission(subreddit_name, submission.id, item)
+
     def fetch_best_comments(self, submission_id: str, limit: int):
         """Write the first level comments on a submission to FirestoreReddit."""
         logging.info(f"reddit connector: fetching comments for subreddit id {submission_id}")
