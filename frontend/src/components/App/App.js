@@ -13,7 +13,7 @@ class App extends React.Component{
                     <Navbar />
                     <Switch>
                         <Route path='/' exact component={Home} />
-                        <Route path='/search-reddit' component={SearchForm} />
+                        <Route path='/searchreddit' component={SearchForm} />
                     </Switch>
                 </div>
             </BrowserRouter>

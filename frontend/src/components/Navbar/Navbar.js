@@ -14,20 +14,14 @@ function Navbar () {
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <Link to="/searchreddit">
-                            <li class="nav-item">
-                                <a class="nav-link">Search</a>
-                            </li>
+                        <Link to="/searchreddit" class="nav-link">
+                            <li class="nav-item">Search</li>
                         </Link>
-                        <Link to="/insights">
-                            <li class="nav-item">
-                                <a class="nav-link">Insights</a>
-                            </li>
+                        <Link to="/insights" class="nav-link">
+                            <li class="nav-item">Insights</li>
                         </Link>
-                        <Link to="/data">
-                            <li class="nav-item">
-                                <a class="nav-link">Data</a>
-                            </li>
+                        <Link to="/data" class="nav-link">
+                            <li class="nav-item">Data</li>
                         </Link>
                     </ul>
                 </div>

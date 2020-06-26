@@ -30,7 +30,7 @@ class SearchForm extends React.Component {
             <div className="SearchForm">
                 <form>
                     <div class="form-group col-md-6">
-                        <label for="subreddit">Subreddit</label>
+                        <label>Subreddit</label>
                         <input type="text" class="form-control" id="subreddit" placeholder="e.g. Coronavirus" 
                             onChange={this.handleSubredditChange} />
                         <div class="col-auto my-1">
@@ -43,7 +43,7 @@ class SearchForm extends React.Component {
                             </select>
                         </div>
                         <div class="col-auto my-1">
-                            <label class="mr-sm-2" for="inlineFormCustomSelect">Limit</label>
+                            <label class="mr-sm-2">Limit</label>
                             <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" onSelect={this.handleLimitChange}>
                                 <option selected>Choose...</option>
                                 <option value="5">5</option>

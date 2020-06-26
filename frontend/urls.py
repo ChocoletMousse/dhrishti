@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import path, re_path
 from frontend import views
 
 urlpatterns = [
     path('', views.index),
+    re_path(r'^(?:.*)/?$', views.index)
     # path("searchreddit", views.search, name="search-reddit"),
     # path("subreddit", views.load_subreddit_posts, name="load-reddit-submissions"),
     # path("insights", views.get_dhrishti_data, name="get-insights"),
