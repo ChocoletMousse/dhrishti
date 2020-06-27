@@ -4,6 +4,7 @@ import Navbar from '../Navbar/Navbar';
 import SearchForm from '../SearchForm/SearchForm';
 import Home from '../Home/Home';
 import {BrowserRouter, Route, Switch } from 'react-router-dom'
+import Cookies from 'js-cookie';
 
 class App extends React.Component{
     render(){
@@ -12,8 +13,8 @@ class App extends React.Component{
                 <div>
                     <Navbar />
                     <Switch>
-                        <Route path='/' exact component={Home} />
-                        <Route path='/searchreddit' component={SearchForm} />
+                        <Route path='/ui/' exact component={Home} />
+                        <Route path='/ui/searchreddit' component={SearchForm} />
                     </Switch>
                 </div>
             </BrowserRouter>

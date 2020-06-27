@@ -5,23 +5,23 @@ function Navbar () {
     
     return (
         <div>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <Link to="/">
-                    <a class="navbar-brand">dhrishti</a>
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <Link to="/ui/">
+                    <a className="navbar-brand">dhrishti</a>
                 </Link>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <Link to="/searchreddit" class="nav-link">
-                            <li class="nav-item">Search</li>
+                <div className="collapse navbar-collapse" id="navbarNav">
+                    <ul className="navbar-nav">
+                        <Link to="/ui/searchreddit" className="nav-link">
+                            <li className="nav-item">Search</li>
                         </Link>
-                        <Link to="/insights" class="nav-link">
-                            <li class="nav-item">Insights</li>
+                        <Link to="/ui/insights" className="nav-link">
+                            <li className="nav-item">Insights</li>
                         </Link>
-                        <Link to="/data" class="nav-link">
-                            <li class="nav-item">Data</li>
+                        <Link to="/ui/data" className="nav-link">
+                            <li className="nav-item">Data</li>
                         </Link>
                     </ul>
                 </div>
