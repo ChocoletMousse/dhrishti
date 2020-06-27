@@ -7,6 +7,7 @@ import json
 
 reddit_connector = RedditConnector()
 sentiment = SentimentAnalyser()
+# TODO create a way navigate between submissions and comments
 
 
 # Create your views here.
@@ -17,21 +18,12 @@ def load_subreddit_posts(request):
         form = json.loads(jsonForm)
         print(f"received the following data: {form}")
         subreddit = form['subreddit']
-        limit = form['limit']
+        sub_limit = form['limit']
         order = form['order']
-        if order == 'top':
-            reddit_connector.fetch_top_posts(subreddit, limit)
-            return HttpResponse("Gathered the top %d results from /r/%s" % (limit, subreddit))
-        if order == 'latest':
-            reddit_connector.fetch_latest_posts(subreddit, limit)
-            return HttpResponse("Gathered data from the latest %d results from /r/%s" % (limit, subreddit))
-    else:
-        return HttpResponse(f"Did not receive a POST request, received a {request.method} request")
-
-
-@require_http_methods(["GET"])
-def get_subreddit_data(request):
-    return HttpResponse('still needs work lol')
+        submissions = reddit_connector.fetch_posts(subreddit, order, sub_limit)
+        comments = reddit_connector.fetch_comments(submissions)
+        reddit_connector.fetch_responses(comments)
+        return HttpResponse("Gathered the %s results from /r/%s" % (order, subreddit))
 
 
 @require_http_methods(["GET"])
@@ -40,10 +32,9 @@ def get_dhrishti_data(request):
 
 
 @require_http_methods(["GET"])
-def view_submission_data(request, subreddit: str, limit: int):
-    documents = reddit_connector.get_submissions(subreddit, limit)
+def get_submission_data(request, limit: int = 10):
+    documents = reddit_connector.get_submissions(limit)
     context = {
-        'subreddit': subreddit,
         'documents': documents
     }
     return render(request, "dhrishtirest/subreddits.html", context)
@@ -51,12 +42,16 @@ def view_submission_data(request, subreddit: str, limit: int):
 
 @require_http_methods(["GET"])
 def analyse_text(request, subreddit: str, limit: int):
-    documents = reddit_connector.get_submissions(subreddit, limit)
+    documents = reddit_connector.get_submissions(limit)
     sentences_analysis = sentiment.analyse_text(subreddit, documents, "title")
     context = {
         'sentences_analysis': sentences_analysis
     }
     return render(request, "dhrishtirest/analysis.html", context)
+
+# ========================================================================================== #
+#                                   TO BE REPLACED                                           #
+# ========================================================================================== #
 
 
 @require_http_methods(["GET"])
@@ -66,10 +61,9 @@ def load_comments(request, submission_id: str, limit: int):
 
 
 @require_http_methods(["GET"])
-def view_comments_data(request, submission_id: str, limit: int):
-    documents = reddit_connector.get_comments(submission_id, limit)
+def get_comments_data(request, limit: int):
+    documents = reddit_connector.get_comments(limit)
     context = {
-        'submission_id': submission_id,
         'documents': documents
     }
     return render(request, "dhrishtirest/comments.html", context)

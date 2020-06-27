@@ -4,19 +4,21 @@
     </head>
     
     <body>
+    {% include "dhrishtirest/nav.html" %}
     {% if documents %}
         {% for document in documents %}
         {% with submission=document.to_dict %}
             {% if forloop.first %}
     <div class="row">
             {% endif %}
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                 <h5 class="card-title">{{ submission.title }}</h5>
+                <p class="card-text"><i>/r/{{ submission.subreddit }}</i></p>
             {% if submission.score_timestamp %}
-                <h6 class="card-subtitle mb-2 text-muted">{{ submission.negative_flag }}</h6>
-                <p class="card-text">Sentiment score: {{ submission.sentiment_score }}</p>
+            <h6 class="card-subtitle mb-2 text-muted">{{ submission.negative_flag }}</h6>
+            <p class="card-text">Sentiment score: {{ submission.sentiment_score }}</p>
                 <p class="card-text">Sentiment magnitude: {{ submission.sentiment_magnitude }}</p>
             {% else %}
                 <p class="card-text">NOT SCORED YET</p>
@@ -36,7 +38,7 @@
         {% endwith %}
         {% endfor %}
     {% else %}
-    <p>No results were retrieved for the subreddit /r/{{ subreddit }}.</p>
+    <p>No results could be retrieved.</p>
     {% endif %}
     </body>
 </html>
