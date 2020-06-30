@@ -9,7 +9,7 @@ class SearchForm extends React.Component {
             subreddit: '',
             order: 'top',
             limit: 0,
-            results: []
+            loading: false
         };
         this.handleSubredditChange = this.handleSubredditChange.bind(this);
         this.handleOrderChange = this.handleOrderChange.bind(this);
@@ -31,13 +31,15 @@ class SearchForm extends React.Component {
 
     handleSearch(e) {
         e.preventDefault();
+        this.setState({loading: true});
         console.log('handling form to search reddit');
-        let results = Dhrishti.searchReddit(
+        Dhrishti.searchReddit(
             this.state.subreddit,
             this.state.order,
             parseInt(this.state.limit)
-        );
-        return results;
+        ).then(loaded => {
+            this.setState({loading: loaded})
+        }).catch(error => console.log(error));
     }
 
     render(){
@@ -61,13 +63,25 @@ class SearchForm extends React.Component {
                             <label className="mr-sm-2">Limit</label>
                             <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" onChange={this.handleLimitChange}>
                                 <option defaultValue={"5"}>Choose...</option>
+                                <option value="2">2</option>
                                 <option value="5">5</option>
                                 <option value="10">10</option>
                                 <option value="15">15</option>
                             </select>
                         </div>
                         <br />
-                        <button className="btn btn-primary" type="submit" onSubmit={this.handleSearch}>Submit</button>
+                        {
+                            this.state.loading 
+                            ? (
+                                <button className="btn btn-primary" type="submit" disabled>
+                                    <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+                            ) 
+                            : (
+                                <button className="btn btn-primary" type="submit" onSubmit={this.handleSearch}>Submit</button>
+                            )
+                        }
                     </div>
                 </form>
             </div>

@@ -24,6 +24,8 @@ def load_subreddit_posts(request):
         comments = reddit_connector.fetch_comments(submissions)
         reddit_connector.fetch_responses(comments)
         return HttpResponse("Gathered the %s results from /r/%s" % (order, subreddit))
+    else:
+        return HttpResponse(f"Cannot use a {request.method} method for this endpoint.")
 
 
 @require_http_methods(["GET"])

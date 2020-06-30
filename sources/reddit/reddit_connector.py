@@ -33,7 +33,7 @@ class RedditConnector(FirestoreReddit):
         if order == "top":
             submissions = subreddit_obj.top(limit=limit)
         elif order == "latest":
-            submissions = subreddit_obj.latest(limit=limit)
+            submissions = subreddit_obj.new(limit=limit)
         elif order == "controversial":
             submissions = subreddit_obj.controversial(limit=limit)
         submission_list = []
@@ -61,7 +61,7 @@ class RedditConnector(FirestoreReddit):
     #         item = schema.reddit_submission_schema(submission)
     #         self.write_submission(subreddit_name, submission.id, item)
 
-    def fetch_comments(self, submissions: list, limit: int = 5):
+    def fetch_comments(self, submissions: list, limit: int = 2):
         """Write the first level comments on a submission to FirestoreReddit."""
         logging.info(f"reddit connector: fetching comments.")
         comments = []
@@ -80,13 +80,14 @@ class RedditConnector(FirestoreReddit):
                 comments.append(comment)
         return comments
 
-    def fetch_responses(self, comments: list, limit: int = 5):
+    def fetch_responses(self, comments: list, limit: int = 2):
         """Write the first level comments on a submission to FirestoreReddit."""
         logging.info(f"reddit connector: fetching responses.")
         responses = []
         for comment in comments:
             response_count = 0
             comment.refresh()
+            comment.replies.replace_more(limit=10)
             for response in comment.replies:
                 if response_count == limit:
                     break
@@ -101,7 +102,6 @@ class RedditConnector(FirestoreReddit):
 # ========================================================================================== #
 #                                   TO BE REPLACED                                           #
 # ========================================================================================== #
-
 
     def fetch_best_comments(self, submission_id: str, limit: int):
         """Write the first level comments on a submission to FirestoreReddit."""
