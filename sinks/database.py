@@ -1,6 +1,7 @@
 from google.cloud import firestore
 from google.cloud.firestore import Query
 import logging
+import json
 
 
 class FirestoreReddit():
@@ -22,12 +23,14 @@ class FirestoreReddit():
         logging.info(f"saving submission {submission_id}.")
         self.db.collection(self.subreddit_ref).document(submission_id).set(item)
 
-    def get_submissions(self, limit: int = 10) -> list:
+    def get_submissions(self) -> list:
         """Retrieves the specified number of submissions from a given subreddit."""
+        limit = 10
         logging.info(f"getting {limit} submissions")
         documents = self.db.collection(self.subreddit_ref) \
             .order_by('landing_timestamp', direction=Query.DESCENDING).limit(limit).stream()
-        return documents
+        dict_docs = [doc.to_dict() for doc in documents]
+        return json.dumps(dict_docs, default=str)
 
     def get_submissions_by_subreddit(self, subreddit: str) -> list:
         """Retrieves the specified number of submissions from a given subreddit."""

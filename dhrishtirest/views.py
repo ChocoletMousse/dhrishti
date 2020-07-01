@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.http import require_http_methods
 from sources.reddit.reddit_connector import RedditConnector
 from nlp.sentiment import SentimentAnalyser
 import json
+import logging
 
 reddit_connector = RedditConnector()
 sentiment = SentimentAnalyser()
@@ -16,30 +18,28 @@ def load_subreddit_posts(request):
     if request.method == "POST":
         jsonForm = request.body.decode('utf-8')
         form = json.loads(jsonForm)
-        print(f"received the following data: {form}")
+        logging.info(f"received the following data: {form}")
         subreddit = form['subreddit']
         sub_limit = form['limit']
         order = form['order']
+
         submissions = reddit_connector.fetch_posts(subreddit, order, sub_limit)
+        sentiment.analyse_submissions(submissions)
         comments = reddit_connector.fetch_comments(submissions)
-        reddit_connector.fetch_responses(comments)
+        sentiment.analyse_comments(comments)
+        responses = reddit_connector.fetch_responses(comments)
+        sentiment.analyse_responses(responses)
+
         return HttpResponse("Gathered the %s results from /r/%s" % (order, subreddit))
     else:
         return HttpResponse(f"Cannot use a {request.method} method for this endpoint.")
 
 
 @require_http_methods(["GET"])
-def get_dhrishti_data(request):
-    return HttpResponse('still needs work lmao')
-
-
-@require_http_methods(["GET"])
-def get_submission_data(request, limit: int = 10):
-    documents = reddit_connector.get_submissions(limit)
-    context = {
-        'documents': documents
-    }
-    return render(request, "dhrishtirest/subreddits.html", context)
+def get_submission_data(request):
+    logging.info(f"received {request.method} request for reddit submissions data")
+    documents = reddit_connector.get_submissions()
+    return HttpResponse(documents)
 
 
 @require_http_methods(["GET"])

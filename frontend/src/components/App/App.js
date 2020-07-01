@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import Navbar from '../Navbar/Navbar';
 import SearchForm from '../SearchForm/SearchForm';
 import Home from '../Home/Home';
+import Data from '../Data/Data';
 import {BrowserRouter, Route, Switch } from 'react-router-dom'
-import Cookies from 'js-cookie';
 
 class App extends React.Component{
     render(){
@@ -15,6 +15,7 @@ class App extends React.Component{
                     <Switch>
                         <Route path='/ui/' exact component={Home} />
                         <Route path='/ui/searchreddit' component={SearchForm} />
+                        <Route path='/ui/data' component={Data} />
                     </Switch>
                 </div>
             </BrowserRouter>
