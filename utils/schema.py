@@ -6,9 +6,11 @@ from google.cloud.language_v1 import enums
 def reddit_submission_schema(submission: Submission, subreddit: str) -> dict:
     """Submission document structure for storage"""
     return {
+        "id": submission.id,
         "name": submission.name,
         "type": "submission",
         "subreddit": subreddit,
+        "permalink": submission.permalink,
         "title": submission.title,
         "score": submission.score,
         "upvote_ratio": submission.upvote_ratio,
@@ -21,9 +23,11 @@ def reddit_submission_schema(submission: Submission, subreddit: str) -> dict:
 
 def reddit_comment_schema(comment: Comment, submission_id: str) -> dict:
     return {
+        "id": comment.id,
         "comment": comment.body,
         "type": "comment",
         "submission_id": submission_id,
+        "permalink": comment.permalink,
         "score": comment.score,
         "parent_id": comment.parent_id,
         "created_utc": comment.created_utc,
@@ -33,9 +37,11 @@ def reddit_comment_schema(comment: Comment, submission_id: str) -> dict:
 
 def reddit_response_schema(response: Comment, comment_id) -> dict:
     return {
+        "id": response.id,
         "comment": response.body,
         "type": "response",
         "comment_id": comment_id,
+        "permalink": response.permalink,
         "score": response.score,
         "parent_id": response.parent_id,
         "created_utc": response.created_utc,

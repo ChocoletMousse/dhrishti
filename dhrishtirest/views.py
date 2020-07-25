@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.http import require_http_methods
 from sources.reddit.reddit_connector import RedditConnector
 from nlp.sentiment import SentimentAnalyser
@@ -25,10 +24,10 @@ def load_subreddit_posts(request):
 
         submissions = reddit_connector.fetch_posts(subreddit, order, sub_limit)
         sentiment.analyse_submissions(submissions)
-        comments = reddit_connector.fetch_comments(submissions)
-        sentiment.analyse_comments(comments)
-        responses = reddit_connector.fetch_responses(comments)
-        sentiment.analyse_responses(responses)
+        # comments = reddit_connector.fetch_comments(submissions)
+        # sentiment.analyse_comments(comments)
+        # responses = reddit_connector.fetch_responses(comments)
+        # sentiment.analyse_responses(responses)
 
         return HttpResponse("Gathered the %s results from /r/%s" % (order, subreddit))
     else:
@@ -42,23 +41,20 @@ def get_submission_data(request):
     return HttpResponse(documents)
 
 
-@require_http_methods(["GET"])
-def analyse_text(request, subreddit: str, limit: int):
-    documents = reddit_connector.get_submissions(limit)
-    sentences_analysis = sentiment.analyse_text(subreddit, documents, "title")
-    context = {
-        'sentences_analysis': sentences_analysis
-    }
-    return render(request, "dhrishtirest/analysis.html", context)
-
-# ========================================================================================== #
-#                                   TO BE REPLACED                                           #
-# ========================================================================================== #
+# @require_http_methods(["GET"])
+# def analyse_text(request, subreddit: str, limit: int):
+#     documents = reddit_connector.get_submissions(limit)
+#     sentences_analysis = sentiment.analyse_text(subreddit, documents, "title")
+#     context = {
+#         'sentences_analysis': sentences_analysis
+#     }
+#     return render(request, "dhrishtirest/analysis.html", context)
 
 
 @require_http_methods(["GET"])
-def load_comments(request, submission_id: str, limit: int):
-    reddit_connector.fetch_best_comments(submission_id, limit)
+def load_comments(request, submission_id: str):
+    comments = reddit_connector.fetch_comments(submission_id, 5)
+    sentiment.analyse_comments(comments)
     return HttpResponse("fetched comments.")
 
 
@@ -71,14 +67,14 @@ def get_comments_data(request, limit: int):
     return render(request, "dhrishtirest/comments.html", context)
 
 
-@require_http_methods(["GET"])
-def analyse_comments(request, submission_id: str, limit: int):
-    documents = reddit_connector.get_comments(submission_id, limit)
-    sentences_analysis = sentiment.analyse_text(submission_id, documents, "comment")
-    context = {
-        'sentences_analysis': sentences_analysis
-    }
-    return render(request, "dhrishtirest/analysis.html", context)
+# @require_http_methods(["GET"])
+# def analyse_comments(request, submission_id: str, limit: int):
+#     documents = reddit_connector.get_comments(submission_id, limit)
+#     sentences_analysis = sentiment.analyse_text(submission_id, documents, "comment")
+#     context = {
+#         'sentences_analysis': sentences_analysis
+#     }
+#     return render(request, "dhrishtirest/analysis.html", context)
 
 
 @require_http_methods(["GET"])

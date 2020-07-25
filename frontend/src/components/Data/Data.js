@@ -1,40 +1,65 @@
 import React from 'react';
-import axios from 'axios';
-import Submission from '../Data/Submission';
+import {Link} from 'react-router-dom';
+import SubmissionsList from './SubmissionsList';
+import CommentsList from './CommentsList';
 
-class Data extends React.Component {
+class Data extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            data: []
+            active: 'posts'
         }
+        this.displayPosts = this.displayPosts.bind(this);
+        this.displayConvos = this.displayConvos.bind(this);
     }
 
-    async componentDidMount() {
-        if (this.state.data.length == 0) {
-            const url = 'http://127.0.0.1:8000/dhrishti/data';
-            let response = await axios.get(url);
-            if (response.status == 200) {
-                this.setState({data: response.data})
-            }
+    displayPosts(e) {
+        if (this.state.active !== 'posts') {
+            this.setState({ active: 'posts' });
+            e.preventDefault(); 
         }
+        
+    }
+    
+    displayConvos(e) {
+        if (this.state.active !== 'convos') {
+            this.setState({ active: 'convos' });
+            e.preventDefault();
+        }
+        
     }
 
     render() {
-        if (this.state.data.length == 0) {
-            return (
-                <div className="d-flex justify-content-center">
-                    <div className="spinner-border text-danger" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
-            ) 
-        } else {
+        if (this.state.active === 'posts') {
             return (
                 <div>
-                    {this.state.data.map(submission => {
-                        return <Submission key={submission.name} submission={submission} />;
-                    })}
+                    <div className="container">
+                        <div className="row align-items-center">
+                            <div className="col-2 offset-sm-5 align-self-center text-center">
+                                <h1>all posts</h1>
+                            </div>
+                            <div className="col-2 offset-sm-3 align-self-center text-center">
+                                <button type="button" className="btn btn-outline-info" onClick={this.displayConvos}>all convos</button>
+                            </div>
+                        </div>
+                    </div>
+                    <SubmissionsList />
+                </div>
+            )
+        } else if (this.state.active === 'convos') {
+            return (
+                <div>
+                    <div className="container">
+                        <div className="row align-items-center">
+                            <div className="col-2 align-self-center text-center">
+                                <button type="button" className="btn btn-outline-info" onClick={this.displayPosts}>all posts</button>
+                            </div>
+                            <div className="col-2 offset-sm-3 align-self-center text-center">
+                                <h1>all convos</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <CommentsList />
                 </div>
             )
         }

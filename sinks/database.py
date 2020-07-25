@@ -44,11 +44,12 @@ class FirestoreReddit():
         self.db.collection(self.comments_ref).document(document_id).set(item)
 
     def get_comments(self, limit: int) -> list:
-        """Retrieves the specified number of comments from a given submission."""
+        """Retrieves the specified number of comments from all comments."""
         logging.info(f"getting {limit} comments")
         documents = self.db.collection(self.comments_ref) \
             .order_by('landing_timestamp', direction=Query.DESCENDING).limit(limit).stream()
-        return documents
+        dict_comments = [comment.to_dict() for comment in documents]
+        return json.dumps(dict_comments, default=str)
 
     def get_comments_by_submission(self, submission_id: str) -> list:
         """Retrieves the specified number of comments from a given submission."""
