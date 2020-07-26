@@ -23,9 +23,8 @@ class FirestoreReddit():
         logging.info(f"saving submission {submission_id}.")
         self.db.collection(self.subreddit_ref).document(submission_id).set(item)
 
-    def get_submissions(self) -> list:
+    def get_submissions(self, limit: int = 10) -> list:
         """Retrieves the specified number of submissions from a given subreddit."""
-        limit = 10
         logging.info(f"getting {limit} submissions")
         documents = self.db.collection(self.subreddit_ref) \
             .order_by('landing_timestamp', direction=Query.DESCENDING).limit(limit).stream()
@@ -43,7 +42,7 @@ class FirestoreReddit():
         logging.info(f"saving comment {document_id}.")
         self.db.collection(self.comments_ref).document(document_id).set(item)
 
-    def get_comments(self, limit: int) -> list:
+    def get_comments(self, limit: int = 5) -> list:
         """Retrieves the specified number of comments from all comments."""
         logging.info(f"getting {limit} comments")
         documents = self.db.collection(self.comments_ref) \
@@ -62,7 +61,7 @@ class FirestoreReddit():
         logging.info(f"saving response {response_id}.")
         self.db.collection(self.responses_ref).document(response_id).set(item)
 
-    def get_responses(self, limit: int) -> list:
+    def get_responses(self, limit: int = 5) -> list:
         """Retrieves the specified number of comments from a given submission."""
         logging.info(f"getting {limit} comments")
         documents = self.db.collection(self.responses_ref) \

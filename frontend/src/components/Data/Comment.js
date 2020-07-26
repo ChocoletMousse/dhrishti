@@ -4,13 +4,13 @@ const Comment = (props) => {
     const [dislpayMore, setDisplayMore] = useState(false);
     if (!dislpayMore) {
         return (
-            <div className="col-sm-4">
+            <div className="col-sm-12">
                 <div className="shadow-sm p-3 mb-5 bg-white rounded">
                     <div className="card">
                         <div className="card-body">
                             <div className="row justify-content-between">
                                 <div className="col-8">
-                                    <p className="card-text"><i><a href={`www.reddit.com${props.submission.permalink}`}>/r/{props.submission.subreddit}</a></i></p>
+                                    <p className="card-text"><i>{props.comment.type}</i></p>
                                 </div>
                                 <div className="col-sm-2">
                                     <svg onClick={() => setDisplayMore(true)} width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-double-right text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -19,10 +19,10 @@ const Comment = (props) => {
                                     </svg>
                                 </div>
                             </div>
-                            <h5 className="card-title">{props.submission.title}</h5>
+                            <h5 className="card-title">{props.comment.body}</h5>
                             <div className="row justify-content-between">
                                 <div className="col-sm-2">
-                                    <a href={props.submission.url}>
+                                    <a href={`www.reddit.com/${props.comment.permalink}`}>
                                         <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-arrow-bar-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                             <path fillRule="evenodd" d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z" />
                                             <path fillRule="evenodd" d="M6 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H6.5A.5.5 0 0 1 6 8zm-2.5 6a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 1 0v11a.5.5 0 0 1-.5.5z" />
@@ -46,13 +46,13 @@ const Comment = (props) => {
         )
     } else {
         return (
-            <div className="col-sm-4">
+            <div className="col-sm-12">
                 <div className="shadow-sm p-3 mb-5 bg-white rounded">
                     <div className="card">
                         <div className="card-body">
                             <div className="row justify-content-between">
                                 <div className="col-8">
-                                    <p className="card-text"><i><a href={`www.reddit.com${props.submission.permalink}`}>/r/{props.submission.subreddit}</a></i></p>
+                                    <p className="card-text"><i><a href={`www.reddit.com${props.comment.permalink}`}>/r/{props.comment.subreddit}</a></i></p>
                                 </div>
                                 <div className="col-sm-2">
                                     <svg onClick={() => setDisplayMore(false)} width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-double-right text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -61,10 +61,10 @@ const Comment = (props) => {
                                     </svg>
                                 </div>
                             </div>
-                            <h6 className="card-subtitle mb-2 text-muted">{props.submission.negative_flag}</h6>
-                            <p className="card-text">Sentiment score: {props.submission.sentiment_score}</p>
-                            <p className="card-text">Sentiment magnitude: {props.submission.sentiment_magnitude}</p>
-                            <p className="card-text">Comments: {props.submission.num_comments}</p>
+                            <h6 className="card-subtitle mb-2 text-muted">{props.comment.negative_flag}</h6>
+                            <p className="card-text">Sentiment score: {props.comment.sentiment_score}</p>
+                            <p className="card-text">Sentiment magnitude: {props.comment.sentiment_magnitude}</p>
+                            <p className="card-text">Comments: {props.comment.num_comments}</p>
                         </div>
                     </div>
                 </div>

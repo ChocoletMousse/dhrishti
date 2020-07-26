@@ -59,12 +59,11 @@ def load_comments(request, submission_id: str):
 
 
 @require_http_methods(["GET"])
-def get_comments_data(request, limit: int):
-    documents = reddit_connector.get_comments(limit)
-    context = {
-        'documents': documents
-    }
-    return render(request, "dhrishtirest/comments.html", context)
+def get_comments_data(request):
+    logging.info(f"received {request.method} request for reddit comments data")
+    # hard coded to return 5 comments only
+    documents = reddit_connector.get_comments()
+    return HttpResponse(documents)
 
 
 # @require_http_methods(["GET"])

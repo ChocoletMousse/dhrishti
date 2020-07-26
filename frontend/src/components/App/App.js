@@ -4,8 +4,6 @@ import Navbar from '../Navbar/Navbar';
 import SearchForm from '../SearchForm/SearchForm';
 import Home from '../Home/Home';
 import Data from '../Data/Data';
-import SubmissionsList from '../Data/SubmissionsList';
-import CommentsList from '../Data/CommentsList';
 import {BrowserRouter, Route, Switch } from 'react-router-dom'
 
 class App extends React.Component{
@@ -18,7 +16,6 @@ class App extends React.Component{
                         <Route path='/ui/' exact component={Home} />
                         <Route path='/ui/searchreddit' component={SearchForm} />
                         <Route path='/ui/data' exact component={Data} />
-                        <Route path='/ui/data/convos/' exact component={CommentsList} />
                         {/* <Route path='/ui/data/convos/:id' component={CommentsList} /> */}
                     </Switch>
                 </div>

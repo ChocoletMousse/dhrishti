@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import Comment from './Comment';
 
 class CommentsList extends React.Component{
@@ -48,7 +49,7 @@ class CommentsList extends React.Component{
                 <div className="container">
                     <div className="row">
                         {this.state.data.map(comment => {
-                            return <Comment key={comment.name} submission={submission} />;
+                            return <Comment key={comment.id} comment={comment} />;
                         })}
                     </div>
                 </div>
