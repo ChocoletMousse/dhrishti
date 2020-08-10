@@ -15,8 +15,8 @@ sentiment = SentimentAnalyser()
 @require_http_methods(["POST"])
 def load_subreddit_posts(request):
     if request.method == "POST":
-        jsonForm = request.body.decode('utf-8')
-        form = json.loads(jsonForm)
+        json_form = request.body.decode('utf-8')
+        form = json.loads(json_form)
         logging.info(f"received the following data: {form}")
         subreddit = form['subreddit']
         sub_limit = form['limit']
@@ -51,11 +51,16 @@ def get_submission_data(request):
 #     return render(request, "dhrishtirest/analysis.html", context)
 
 
-@require_http_methods(["GET"])
-def load_comments(request, submission_id: str):
-    comments = reddit_connector.fetch_comments(submission_id, 5)
-    sentiment.analyse_comments(comments)
-    return HttpResponse("fetched comments.")
+@require_http_methods(["POST"])
+def load_comments(request):
+    if request.method == 'POST':
+        json_body = request.body.decode('utf-8')
+        json_submission = json.loads(json_body)
+        logging.info(f"received the following data {json_submission}")
+        submission_id = json_submission['submissionId']
+        comments = reddit_connector.fetch_comments(submission_id, 5)
+        sentiment.analyse_comments(comments)
+        return HttpResponse("fetched comments.")
 
 
 @require_http_methods(["GET"])
@@ -63,6 +68,13 @@ def get_comments_data(request):
     logging.info(f"received {request.method} request for reddit comments data")
     # hard coded to return 5 comments only
     documents = reddit_connector.get_comments()
+    return HttpResponse(documents)
+
+
+@require_http_methods(["GET"])
+def get_comments_by_submission(request, submission_id: str):
+    logging.info(f"received {request.method} request for reddit comments data")
+    documents = reddit_connector.get_comments_by_submission(submission_id)
     return HttpResponse(documents)
 
 

@@ -24,7 +24,7 @@ class FirestoreReddit():
         self.db.collection(self.subreddit_ref).document(submission_id).set(item)
 
     def get_submissions(self, limit: int = 10) -> list:
-        """Retrieves the specified number of submissions from a given subreddit."""
+        """Retrieves the specified number of submissions from all subreddits."""
         logging.info(f"getting {limit} submissions")
         documents = self.db.collection(self.subreddit_ref) \
             .order_by('landing_timestamp', direction=Query.DESCENDING).limit(limit).stream()
@@ -54,7 +54,8 @@ class FirestoreReddit():
         """Retrieves the specified number of comments from a given submission."""
         logging.info(f"getting comments from submission {submission_id}")
         documents = self.db.collection(self.comments_ref).where("submission_id", "==", submission_id).stream()
-        return documents
+        dict_comments = [comment.to_dict() for comment in documents]
+        return json.dumps(dict_comments, default=str)
 
     def write_responses(self, response_id: str, item: dict):
         """Save the response on a comment."""

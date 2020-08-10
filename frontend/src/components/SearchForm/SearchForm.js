@@ -37,8 +37,8 @@ class SearchForm extends React.Component {
             this.state.subreddit,
             this.state.order,
             parseInt(this.state.limit)
-        ).then(loaded => {
-            this.setState({loading: loaded})
+        ).then(success => {
+            this.setState({loading: !success})
         }).catch(error => console.log(error));
     }
 

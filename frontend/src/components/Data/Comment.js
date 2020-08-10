@@ -1,4 +1,5 @@
-import {React, useState} from 'react';
+import React, {useState} from 'react';
+import {Link} from 'react-router-dom';
 
 const Comment = (props) => {
     const [dislpayMore, setDisplayMore] = useState(false);
@@ -19,7 +20,7 @@ const Comment = (props) => {
                                     </svg>
                                 </div>
                             </div>
-                            <h5 className="card-title">{props.comment.body}</h5>
+                            <h5 className="card-title">{props.comment.comment}</h5>
                             <div className="row justify-content-between">
                                 <div className="col-sm-2">
                                     <a href={`www.reddit.com/${props.comment.permalink}`}>
@@ -64,7 +65,8 @@ const Comment = (props) => {
                             <h6 className="card-subtitle mb-2 text-muted">{props.comment.negative_flag}</h6>
                             <p className="card-text">Sentiment score: {props.comment.sentiment_score}</p>
                             <p className="card-text">Sentiment magnitude: {props.comment.sentiment_magnitude}</p>
-                            <p className="card-text">Comments: {props.comment.num_comments}</p>
+                            <p className="card-text">Parent: {props.comment.parent_id}</p>
+                            <p className="card-text">Score: {props.comment.score}</p>
                         </div>
                     </div>
                 </div>

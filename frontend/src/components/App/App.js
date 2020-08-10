@@ -16,7 +16,6 @@ class App extends React.Component{
                         <Route path='/ui/' exact component={Home} />
                         <Route path='/ui/searchreddit' component={SearchForm} />
                         <Route path='/ui/data' exact component={Data} />
-                        {/* <Route path='/ui/data/convos/:id' component={CommentsList} /> */}
                     </Switch>
                 </div>
             </BrowserRouter>

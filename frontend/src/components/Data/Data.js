@@ -52,7 +52,7 @@ class Data extends React.Component{
                     <div className="container">
                         <div className="row align-items-center">
                             <div className="col-2 align-self-center text-center">
-                                <button type="button" className="btn btn-outline-info" onClick={this.displayPosts}>all posts</button>
+                                <button type="button" className="btn btn-outline-danger" onClick={this.displayPosts}>all posts</button>
                             </div>
                             <div className="col-2 offset-sm-3 align-self-center text-center">
                                 <h1>all convos</h1>

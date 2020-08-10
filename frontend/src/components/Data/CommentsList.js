@@ -21,6 +21,7 @@ class CommentsList extends React.Component{
                     if (!response.data.length > 0) {
                         this.setState({ commentsInDB: false });
                     }
+                    console.log('received data: ' + response.data);
                     this.setState({ data: response.data });
                 }
             }
@@ -45,6 +46,7 @@ class CommentsList extends React.Component{
                 </div>
             )
         } else {
+            console.log(this.state.data.map(comment => console.log(comment)));
             return (
                 <div className="container">
                     <div className="row">

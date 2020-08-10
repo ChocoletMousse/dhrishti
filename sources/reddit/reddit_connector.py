@@ -43,7 +43,7 @@ class RedditConnector(FirestoreReddit):
             submission_list.append(submission)
         return submission_list
 
-    def fetch_comments(self, submissions: list, limit: int = 2) -> list:
+    def fetch_comments_for_submissions(self, submissions: list, limit: int = 2) -> list:
         """Write the first level comments on a submission to FirestoreReddit."""
         logging.info(f"reddit connector: fetching comments.")
         comments = []
@@ -60,6 +60,25 @@ class RedditConnector(FirestoreReddit):
                 self.write_comment(comment.id, item)
                 comment_count += 1
                 comments.append(comment)
+        return comments
+
+    def fetch_comments(self, submission_id: str, limit: int = 2) -> list:
+        """Write the first level comments on a submission to FirestoreReddit."""
+        logging.info(f"reddit connector: fetching comments.")
+        comments = []
+        submission = self._reddit_instance.submission(submission_id)
+        comment_count = 0
+        submission.comment_sort = 'best'
+        submission.comments.replace_more(limit=10)
+        for comment in submission.comments:
+            if comment_count == limit:
+                break
+            if self.incorrect_comment_length(comment):
+                continue
+            item = schema.reddit_comment_schema(comment, submission.id)
+            self.write_comment(comment.id, item)
+            comment_count += 1
+            comments.append(comment)
         return comments
 
     def fetch_responses(self, comments: list, limit: int = 2) -> list:
