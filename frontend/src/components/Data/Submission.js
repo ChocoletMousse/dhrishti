@@ -72,7 +72,7 @@ const Submission = (props) => {
                         <div className="card-body">
                             <div className="row justify-content-between">
                                 <div className="col-8">
-                                    <p className="card-text"><i><a href={`www.reddit.com${props.submission.permalink}`}>/r/{props.submission.subreddit}</a></i></p>
+                                    <p className="card-text"><i><a href={`https://www.reddit.com${props.submission.permalink}`}>/r/{props.submission.subreddit}</a></i></p>
                                 </div>
                                 <div className="col-sm-2">
                                     <Link>
@@ -107,7 +107,7 @@ const Submission = (props) => {
                         <div className="card-body">
                             <div className="row justify-content-between">
                                 <div className="col-8">
-                                    <p className="card-text"><i><a href={`www.reddit.com${props.submission.permalink}`}>/r/{props.submission.subreddit}</a></i></p>
+                                    <p className="card-text"><i><a href={`https://www.reddit.com${props.submission.permalink}`}>/r/{props.submission.subreddit}</a></i></p>
                                 </div>
                                 <div className="col-sm-2">
                                     <Link>
