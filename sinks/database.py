@@ -42,7 +42,7 @@ class FirestoreReddit():
         logging.info(f"saving comment {document_id}.")
         self.db.collection(self.comments_ref).document(document_id).set(item)
 
-    def get_comments(self, limit: int = 5) -> list:
+    def get_comments(self, limit: int = 10) -> list:
         """Retrieves the specified number of comments from all comments."""
         logging.info(f"getting {limit} comments")
         documents = self.db.collection(self.comments_ref) \

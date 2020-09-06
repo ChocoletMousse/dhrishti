@@ -32,7 +32,7 @@ class SearchForm extends React.Component {
     handleSearch(e) {
         e.preventDefault();
         this.setState({loading: true});
-        console.log('handling form to search reddit');
+        console.debug('handling form to search reddit');
         Dhrishti.searchReddit(
             this.state.subreddit,
             this.state.order,

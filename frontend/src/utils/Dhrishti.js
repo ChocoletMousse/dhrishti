@@ -10,7 +10,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 const Dhrishti = {
     async searchReddit(subreddit, order, limit) {
         const url = `http://127.0.0.1:8000/dhrishti/search`;
-        console.log(`received csrf token: ${csrfToken}`);
+        console.debug(`received csrf token: ${csrfToken}`);
         console.log(`retrieving the ${order} ${limit} submissions from /r/${subreddit}`);
         let result = await fetch(
             url,
@@ -25,17 +25,17 @@ const Dhrishti = {
             }
         );
         if (result.ok) {
-            console.log('successfully retrieved submission data from reddit.');
+            console.debug('successfully retrieved submission data from reddit.');
             return true;
         } else {
             throw new Error('Something went wrong with the praw? yh... lets blame praw')
         }
     },
     async loadCommentsForSubmission(id) {
-        console.log(`received csrf token: ${csrfToken}`);
-        console.log('loading comments now for submission: ' + id);
+        console.debug(`received csrf token: ${csrfToken}`);
+        console.debug('loading comments for submission: ' + id);
         const url = 'http://127.0.0.1:8000/dhrishti/search/comments';
-        response = await axios.post(
+        let response = await axios.post(
             url,
             {submissionId: id},
             {
@@ -43,8 +43,8 @@ const Dhrishti = {
                 'X-CSRFToken': csrfToken
             }
         );
-        if (response.ok) {
-            console.log('successfully retrieved comment data from reddit.');
+        if (response.status == 200) {
+            console.debug('successfully retrieved comment data from reddit.');
             return true;
         } else {
             throw new Error('Something went wrong with the praw? yh... lets blame praw');

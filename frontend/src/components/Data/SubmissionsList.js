@@ -28,7 +28,6 @@ class SubmissionsList extends React.Component {
                     if (!response.data.length > 0) {
                         this.setState({ postsInDB: false });
                     }
-                    console.log('received data: ' + response.data);
                     this.setState({ data: response.data });
                 }
             }
@@ -53,7 +52,6 @@ class SubmissionsList extends React.Component {
                 </div>
             )
         } else {
-            console.log(this.state.data.map(submission => console.log(submission)));
             return (
                 <div className="container">
                     <div className="row">

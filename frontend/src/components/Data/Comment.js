@@ -14,10 +14,12 @@ const Comment = (props) => {
                                     <p className="card-text"><i><a href={`https://www.reddit.com/${props.comment.submission_id}`}>{props.comment.submission_id}</a></i></p>
                                 </div>
                                 <div className="col-sm-2">
-                                    <svg onClick={() => setDisplayMore(true)} width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-double-right text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" />
-                                        <path fillRule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" />
-                                    </svg>
+                                    <div className="d-flex justify-content-end">
+                                        <svg onClick={() => setDisplayMore(true)} width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-double-right text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fillRule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" />
+                                            <path fillRule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" />
+                                        </svg>
+                                    </div>
                                 </div>
                             </div>
                             <h5 className="card-title">{props.comment.comment}</h5>
@@ -31,14 +33,15 @@ const Comment = (props) => {
                                     </a>
                                 </div>
                                 <div className="col-sm-2">
-                                    <Link to="">
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chat-right-dots" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                            <path fillRule="evenodd" d="M2 1h12a1 1 0 0 1 1 1v11.586l-2-2A2 2 0 0 0 11.586 11H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z" />
-                                            <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
-                                        </svg>
-                                    </Link>
+                                    <div className="d-flex justify-content-end">
+                                        <Link to="">
+                                            <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chat-right-dots" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path fillRule="evenodd" d="M2 1h12a1 1 0 0 1 1 1v11.586l-2-2A2 2 0 0 0 11.586 11H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z" />
+                                                <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                                            </svg>
+                                        </Link>
+                                    </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -55,11 +58,13 @@ const Comment = (props) => {
                                 <div className="col-8">
                                     <p className="card-text"><i><a href={`https://www.reddit.com${props.comment.submission_id}`}>{props.comment.submission_id}</a></i></p>
                                 </div>
-                                <div className="col-sm-2">
-                                    <svg onClick={() => setDisplayMore(false)} width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-double-right text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" />
-                                        <path fillRule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" />
-                                    </svg>
+                                <div className="col-2">
+                                    <div className="d-flex justify-content-end">
+                                        <svg onClick={() => setDisplayMore(false)} width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-double-right text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fillRule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" />
+                                            <path fillRule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" />
+                                        </svg>
+                                    </div>
                                 </div>
                             </div>
                             <h6 className="card-subtitle mb-2 text-muted">{props.comment.negative_flag}</h6>

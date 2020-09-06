@@ -7,28 +7,56 @@ const Submission = (props) => {
     const [displayMore, setDisplayMore] = useState(false);
     const [commentsInDb, setCommentsInDb] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [fetchingComments, setFetchingComments] = useState(false);
 
-    const checkCommentsInDb = async () => {
+    // Look at console log, this is clearly not doing async calls. Use then after get.
+    const loadCommentsForSubmission = async () => {
         setLoading(true);
-        console.log('loading comments data for submission ' + props.submission.id);
-        const url = `http://127.0.0.1:8000/dhrishti/data/comments/${props.submission.key}`;
+        console.log('checking comments data for submission ' + props.submission.id);
+        const url = `http://127.0.0.1:8000/dhrishti/data/comments/${props.submission.id}`;
         let response = await axios.get(url);
         if (response.status == 200) {
             if (!response.data.length > 0) {
-                setCommentsInDb(false);
+                setFetchingComments(true);
+                console.debug(`no comments saved for submission ${props.submission.id} in db`);
+            } else {
+                console.debug(`comments available for submission ${props.submission.id} in db`);
+                setCommentsInDb(true);
                 setLoading(false);
             }
         }
     }
 
-    const loadCommentsForSubmission = () => {
-        setLoading(true);
-        Dhrishti.loadCommentsForSubmission(props.submission.id)
-            .then(success => {
-                setCommentsInDb(success);
-                setLoading(!success);
-            }).catch(error => console.log(error));
-    }
+    useEffect(() => {
+        let loadComments = async () => {
+            if (fetchingComments) {
+                let successfulLoad = await Dhrishti.loadCommentsForSubmission(props.submission.id)
+                    .catch(error => console.log(error));
+                if (successfulLoad) {
+                    console.log('finished comments load.', successfulLoad);
+                    setLoading(false);
+                    setCommentsInDb(successfulLoad);
+                    setFetchingComments(false);
+                }
+            }
+        }
+        loadComments();
+    }, [fetchingComments])
+
+    // Check if there are comments for this post already in the db. If not, load them.
+    // const loadCommentsForSubmission = async () => {
+    //     await checkCommentsInDb().catch(err => console.error(err));
+    //     // console.debug('commentsInDb', commentsInDb);
+    //     // if (!commentsInDb) {
+    //     //     let successfulLoad = await Dhrishti.loadCommentsForSubmission(props.submission.id)
+    //     //         .catch(error => console.log(error));
+    //     //     if (successfulLoad) {
+    //     //         console.log('finished comments load.', successfulLoad);
+    //     //         setLoading(false);
+    //     //         setCommentsInDb(successfulLoad);
+    //     //     }
+    //     // }
+    // }
     
     const commentsInDbIcon = () => {
         if (loading) {

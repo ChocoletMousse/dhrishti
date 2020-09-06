@@ -58,7 +58,7 @@ def load_comments(request):
         json_submission = json.loads(json_body)
         logging.info(f"received the following data {json_submission}")
         submission_id = json_submission['submissionId']
-        comments = reddit_connector.fetch_comments(submission_id, 5)
+        comments = reddit_connector.fetch_comments(submission_id, 2)
         sentiment.analyse_comments(comments)
         return HttpResponse("fetched comments.")
 
