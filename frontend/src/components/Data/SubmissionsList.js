@@ -2,13 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import Submission from './Submission';
 
-
-/**
- * flow:
- * => User sees all submissions => clicks one submission
- * ==> Comments per submission are shown => clicks one comment
- * ===> Replies per comment are shown
- */
 class SubmissionsList extends React.Component {
     constructor(props) {
         super(props);

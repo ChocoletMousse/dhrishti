@@ -9,7 +9,6 @@ const Submission = (props) => {
     const [loading, setLoading] = useState(false);
     const [fetchingComments, setFetchingComments] = useState(false);
 
-    // Look at console log, this is clearly not doing async calls. Use then after get.
     const loadCommentsForSubmission = async () => {
         setLoading(true);
         console.log('checking comments data for submission ' + props.submission.id);
@@ -42,21 +41,6 @@ const Submission = (props) => {
         }
         loadComments();
     }, [fetchingComments])
-
-    // Check if there are comments for this post already in the db. If not, load them.
-    // const loadCommentsForSubmission = async () => {
-    //     await checkCommentsInDb().catch(err => console.error(err));
-    //     // console.debug('commentsInDb', commentsInDb);
-    //     // if (!commentsInDb) {
-    //     //     let successfulLoad = await Dhrishti.loadCommentsForSubmission(props.submission.id)
-    //     //         .catch(error => console.log(error));
-    //     //     if (successfulLoad) {
-    //     //         console.log('finished comments load.', successfulLoad);
-    //     //         setLoading(false);
-    //     //         setCommentsInDb(successfulLoad);
-    //     //     }
-    //     // }
-    // }
     
     const commentsInDbIcon = () => {
         if (loading) {
