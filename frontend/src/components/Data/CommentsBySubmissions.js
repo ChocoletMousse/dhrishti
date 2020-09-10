@@ -26,7 +26,6 @@ const CommentsBySubmission = ({ match }) => {
         }
     }
 
-// TODO get this to display.
     return (
         <div>
             <div className="container">
