@@ -44,6 +44,7 @@ def load_comments(request):
         submission_id = json_submission['submissionId']
         comments = reddit_connector.fetch_comments(submission_id, 2)
         sentiment.analyse_comments(comments)
+        sentiment.analyse_entities_sentiment(comments)
         return HttpResponse("fetched comments.")
 
 
@@ -61,6 +62,8 @@ def get_comments_by_submission(request, submission_id: str):
     documents = reddit_connector.get_comments_by_submission(submission_id)
     return HttpResponse(documents)
 
+
+# TODO decide when to perform entity sentiment analysis for Insight page
 
 @require_http_methods(["GET"])
 def analyse_comments(request, submission_id: str, limit: int):

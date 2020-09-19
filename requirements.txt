@@ -1,9 +1,11 @@
-flake8
-python-dotenv
-praw
 django
 djangorestframework
 django-rest-knox
 django-crispy-forms
 google-cloud-firestore
 google-cloud-language
+flake8
+python-dotenv
+praw
+pytest
+pytest-dotenv

@@ -11,7 +11,7 @@ class FirestoreReddit():
         self.subreddit_ref = "subreddits"
         self.comments_ref = "comments"
         self.responses_ref = "responses"
-        self.entities_ref = "entities"
+        self.entities_sentiment_ref = "entities_sentiment"
 
     def update_documents(self, collection: str, document_id: str, parameters: dict):
         """Fetch a document from firestore based on the domain."""
@@ -78,4 +78,4 @@ class FirestoreReddit():
     def write_entities(self, comment_id: str, item: dict):
         """Writes the output of entity analysis on comments."""
         logging.info(f"saving entities for comment {comment_id}.")
-        self.db.collection(self.entities_ref).document(comment_id).set(item)
+        self.db.collection(self.entities_sentiment_ref).document(comment_id).set(item)

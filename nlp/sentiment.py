@@ -16,46 +16,45 @@ class SentimentAnalyser(FirestoreReddit):
     def analyse_submissions(self, submissions: list):
         """Go through each document in a collection and analyse the sentiment."""
         for submission in submissions:
-            annotations = self.perform_sentiment_analysis(submission.title)
+            sentiment_annotations = self.perform_sentiment_analysis(submission.title)
             self.update_documents(
                 self.subreddit_ref,
                 submission.id,
-                self.format_sentiment(annotations)
+                self.format_sentiment(sentiment_annotations)
             )
         logging.info("performed sentiment analysis on %d documents" % (len(submissions)))
 
     def analyse_comments(self, comments: list):
         """Go through each document in a collection and analyse the sentiment."""
         for comment in comments:
-            annotations = self.perform_sentiment_analysis(comment.body)
+            sentiment_annotations = self.perform_sentiment_analysis(comment.body)
             self.update_documents(
                 self.comments_ref,
                 comment.id,
-                self.format_sentiment(annotations)
+                self.format_sentiment(sentiment_annotations)
             )
         logging.info("performed sentiment analysis on %d documents" % (len(comments)))
 
     def analyse_responses(self, responses: list):
         """Go through each document in a collection and analyse the sentiment."""
         for response in responses:
-            annotations = self.perform_sentiment_analysis(response.body)
+            sentiment_annotations = self.perform_sentiment_analysis(response.body)
             self.update_documents(
                 self.responses_ref,
                 response.id,
-                self.format_sentiment(annotations)
+                self.format_sentiment(sentiment_annotations)
             )
         logging.info("performed sentiment analysis on %d documents" % (len(responses)))
 
-    def analyse_entities(self, comments: list):
+    def analyse_entities_sentiment(self, comments: list):
         """Go through each document in a collection and analyse the sentiment."""
         for comment in comments:
-            annotations = self.perform_entity_analysis(comment.body)
-            subreddit_name = comment.subreddit.display_name
+            annotations = self.perform_entity_sentiment_analysis(comment.body)
             self.write_entities(
                 comment.id,
-                self.format_entities(annotations.entities, subreddit_name)
+                self.format_entities(annotations.entities, comment)
             )
-        logging.info("performed sentiment analysis on %d documents" % (len(comments)))
+        logging.info("performed sentiment analysis on entities in %d documents" % (len(comments)))
 
     def perform_sentiment_analysis(self, target_attr: str) -> list:
         doc = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=target_attr)
@@ -65,6 +64,11 @@ class SentimentAnalyser(FirestoreReddit):
     def perform_entity_analysis(self, target_attr: str) -> list:
         doc = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=target_attr)
         annotations = self._client.analyze_entities(document=doc)
+        return annotations
+
+    def perform_entity_sentiment_analysis(self, target_attr: str) -> list:
+        doc = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=target_attr)
+        annotations = self._client.analyze_entity_sentiment(document=doc)
         return annotations
 
     def format_sentiment(self, annotations: dict) -> dict:
@@ -84,34 +88,12 @@ class SentimentAnalyser(FirestoreReddit):
         parameters[fields.SCORE_TIMESTAMP] = SERVER_TIMESTAMP
         return parameters
 
-    def format_entities(self, entities: list, subreddit: str) -> dict:
+    def format_entities(self, entities: list, comment: str) -> dict:
         """Returns a dict containing entity analysis values."""
-        parameters = {"subreddit": subreddit}
         cleaned_entities = [schema.reddit_entity_schema(entity) for entity in entities]
-        parameters["entities"] = cleaned_entities
+        parameters = {"subreddit": comment.subreddit.name}
+        parameters[fields.COMMENT_ID] = comment.id
+        parameters[fields.SUBREDDIT_ID] = comment.subreddit.id
+        parameters[fields.SCORE] = comment.score
+        parameters[fields.ENTITIES] = cleaned_entities
         return parameters
-
-# ========================================================================================== #
-#                                   TO BE REPLACED                                           #
-# ========================================================================================== #
-
-    def analyse_text(self, collection: str, documents: list, target_attr: str) -> list:
-        """Go through each document in a collection and analyse the sentiment."""
-        sentences_analysis = []
-        for doc in documents:
-            id = doc.id
-            annotations = self.perform_sentiment_analysis(doc.to_dict(), target_attr)
-            self.update_documents(
-                target_attr,
-                collection,
-                id,
-                self.format_sentiment(annotations)
-            )
-            sentences_analysis.append(annotations.sentences)
-        logging.info("performed sentiment analysis on %d documents" % (len(sentences_analysis)))
-        return sentences_analysis
-
-    def perform_sentiment_analysis_old(self, document: dict, target_attr: str) -> list:
-        doc = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=document.get(target_attr))
-        annotations = self._client.analyze_sentiment(document=doc)
-        return annotations
