@@ -11,19 +11,14 @@ sentiment = SentimentAnalyser()
 
 
 @require_http_methods(["POST"])
-def load_subreddit_posts(request):
+def load_analyse_subreddit_posts(request):
     if request.method == "POST":
         json_form = request.body.decode('utf-8')
         form = json.loads(json_form)
         logging.info(f"received the following data: {form}")
-        subreddit = form['subreddit']
-        sub_limit = form['limit']
-        order = form['order']
-
-        submissions = reddit_connector.fetch_posts(subreddit, order, sub_limit)
+        submissions = reddit_connector.fetch_posts(form['subreddit'], form['order'], form['limit'])
         sentiment.analyse_submissions(submissions)
-
-        return HttpResponse("Gathered the %s results from /r/%s" % (order, subreddit))
+        return HttpResponse("Gathered the %s results from /r/%s" % (form['order'], form['subreddit']))
     else:
         return HttpResponse(f"Cannot use a {request.method} method for this endpoint.")
 
@@ -36,15 +31,17 @@ def get_submission_data(request):
 
 
 @require_http_methods(["POST"])
-def load_comments(request):
+def load_analyse_comments(request):
     if request.method == 'POST':
         json_body = request.body.decode('utf-8')
         json_submission = json.loads(json_body)
         logging.info(f"received the following data {json_submission}")
         submission_id = json_submission['submissionId']
-        comments = reddit_connector.fetch_comments(submission_id, 2)
+        comments = reddit_connector.fetch_comments(submission_id, 5)
         sentiment.analyse_comments(comments)
         return HttpResponse("fetched comments.")
+    else:
+        return HttpResponse(f"Cannot use a {request.method} method for this endpoint.")
 
 
 @require_http_methods(["GET"])
@@ -62,14 +59,15 @@ def get_comments_by_submission(request, submission_id: str):
     return HttpResponse(documents)
 
 
-@require_http_methods(["GET"])
-def analyse_comments(request, submission_id: str, limit: int):
-    documents = reddit_connector.get_comments(submission_id, limit)
-    sentences_analysis = sentiment.analyse_text(submission_id, documents, "comment")
-    context = {
-        'sentences_analysis': sentences_analysis
-    }
-    return render(request, "dhrishtirest/analysis.html", context)
+# NOTE DEPRECATED
+# @require_http_methods(["GET"])
+# def analyse_comments(request, submission_id: str, limit: int):
+#     documents = reddit_connector.get_comments(submission_id, limit)
+#     sentences_analysis = sentiment.analyse_text(submission_id, documents, "comment")
+#     context = {
+#         'sentences_analysis': sentences_analysis
+#     }
+#     return render(request, "dhrishtirest/analysis.html", context)
 
 
 @require_http_methods(["GET"])
