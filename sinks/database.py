@@ -1,5 +1,8 @@
-from google.cloud import firestore
+from google.api_core import retry
+from google.cloud import firestore, bigquery
 from google.cloud.firestore import Query
+from google.cloud.bigquery import DatasetReference, Table
+from utils.schema import reddit_bq_schema
 import logging
 import json
 
@@ -79,3 +82,36 @@ class FirestoreReddit():
         """Writes the output of entity analysis on comments."""
         logging.info(f"saving entities for comment {comment_id}.")
         self.db.collection(self.entities_sentiment_ref).document(comment_id).set(item)
+
+
+class BigQueryReddit():
+
+    def __init__(self):
+        self.db = bigquery.Client()
+        self.database = "dhrishti_analytics"
+        self.table = "reddit_sentiment"
+        self.table_name = self.db.dataset(self.database).table(self.table)
+        self.dataset_ref = DatasetReference(self.db.project, self.database)
+        self.table_ref = self.dataset_ref.table(self.table)
+
+    def create_reddit_table(self):
+        table = Table(self.table_ref, schema=reddit_bq_schema())
+        output = self.db.create_table(table, exists_ok=True)
+        logging.info(f"created table {output.full_table_id}")
+
+    def write_to_table(self, documents: list):
+        self.create_reddit_table()
+        logging.info("inserting nlp sentiment entity output to bigquery")
+        bq_errors = self.db.insert_rows_json(
+            self.table_name,
+            json_rows=documents
+        )
+        if len(bq_errors) > 0:
+            raise BigQueryJsonException(bq_errors)
+
+
+class BigQueryJsonException(Exception):
+
+    def __init__(self, errors):
+        self.errors = errors
+        super.__init__(self.errors)

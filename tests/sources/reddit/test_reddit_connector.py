@@ -1,7 +1,4 @@
-from unittest.mock import patch, MagicMock, Mock
-# from unittest import TestCase
 import pytest
-
 from sources.reddit.reddit_connector import RedditConnector
 
 
@@ -32,7 +29,3 @@ class TestRedditConnector():
         subreddit.controversial.assert_called_once()
         reddit_connector.write_submission.call_count == 6
         assert len(test_controversial) == 2
-
-    
-    @pytest.mark.usefixtures()
-

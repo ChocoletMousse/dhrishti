@@ -2,23 +2,26 @@ from google.cloud import language
 from google.cloud.language import types, enums
 from google.cloud.firestore import SERVER_TIMESTAMP
 from nlp.thresholds import sentiment_score, sentiment_magnitude
-from sinks.database import FirestoreReddit
+from sinks.database import FirestoreReddit, BigQueryReddit
+from praw.models import Comment
 from utils import fields, schema
 import logging
+from datetime import datetime
 
 
-class SentimentAnalyser(FirestoreReddit):
+class SentimentAnalyser():
 
     def __init__(self):
-        super().__init__()
         self._client = language.LanguageServiceClient()
+        self.firestore = FirestoreReddit()
+        self.bq = BigQueryReddit()
 
     def analyse_submissions(self, submissions: list):
         """Go through each document in a collection and analyse the sentiment."""
         for submission in submissions:
             sentiment_annotations = self.perform_sentiment_analysis(submission.title)
-            self.update_documents(
-                self.subreddit_ref,
+            self.firestore.update_documents(
+                self.firestore.subreddit_ref,
                 submission.id,
                 self.format_sentiment(sentiment_annotations)
             )
@@ -28,32 +31,34 @@ class SentimentAnalyser(FirestoreReddit):
         """Go through each document in a collection and analyse the sentiment."""
         for comment in comments:
             sentiment_annotations = self.perform_sentiment_analysis(comment.body)
-            self.update_documents(
-                self.comments_ref,
+            annotations = self.perform_entity_sentiment_analysis(comment.body)
+
+            formatted_firestore = self.format_sentiment(sentiment_annotations)
+            formatted_bigquery = self.format_entities(annotations.entities, comment)
+            formatted_bigquery[fields.COMMENT_SENTIMENT] = formatted_firestore.get(fields.SENTIMENT_SCORE)
+            formatted_bigquery[fields.COMMENT_MAGNITUDE] = formatted_firestore.get(fields.SENTIMENT_MAGNITUDE)
+
+            self.firestore.update_documents(
+                self.firestore.comments_ref,
                 comment.id,
-                self.format_sentiment(sentiment_annotations)
+                formatted_firestore
             )
+            self.bq.write_to_table([formatted_bigquery])
+
         logging.info("performed sentiment analysis on %d documents" % (len(comments)))
 
     def analyse_responses(self, responses: list):
         """Go through each document in a collection and analyse the sentiment."""
         for response in responses:
             sentiment_annotations = self.perform_sentiment_analysis(response.body)
-            self.update_documents(
-                self.responses_ref,
-                response.id,
-                self.format_sentiment(sentiment_annotations)
-            )
-        logging.info("performed sentiment analysis on %d documents" % (len(responses)))
+            self.firestore.update_documents(
+                self.firestore.responses_ref,
 
     def analyse_entities_sentiment(self, comments: list):
-        """Go through each document in a collection and analyse the sentiment."""
         for comment in comments:
             annotations = self.perform_entity_sentiment_analysis(comment.body)
-            self.write_entities(
-                comment.id,
-                self.format_entities(annotations.entities, comment)
-            )
+            formatted = self.format_entities(annotations.entities, comment)
+            self.bq.write_to_table(formatted)
         logging.info("performed sentiment analysis on entities in %d documents" % (len(comments)))
 
     def perform_sentiment_analysis(self, target_attr: str) -> list:
@@ -88,7 +93,7 @@ class SentimentAnalyser(FirestoreReddit):
         parameters[fields.SCORE_TIMESTAMP] = SERVER_TIMESTAMP
         return parameters
 
-    def format_entities(self, entities: list, comment: str) -> dict:
+    def format_entities(self, entities: list, comment: Comment) -> dict:
         """Returns a dict containing entity analysis values."""
         cleaned_entities = [schema.reddit_entity_schema(entity) for entity in entities]
         parameters = {"subreddit": comment.subreddit.name}
@@ -96,4 +101,6 @@ class SentimentAnalyser(FirestoreReddit):
         parameters[fields.SUBREDDIT_ID] = comment.subreddit.id
         parameters[fields.SCORE] = comment.score
         parameters[fields.ENTITIES] = cleaned_entities
+        parameters[fields.LANDING_TIMESTAMP] = str(datetime.now())
+        parameters[fields.CREATED_TIMESTAMP] = str(datetime.utcfromtimestamp(int(comment.created_utc)))
         return parameters
