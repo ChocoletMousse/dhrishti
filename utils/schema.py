@@ -64,6 +64,7 @@ def reddit_entity_schema(entity) -> dict:
 
 
 def reddit_bq_schema() -> list:
+    """BigQuery schema for the reddit table."""
     return [
         SchemaField("comment_id", "STRING", mode="NULLABLE"),
         SchemaField("entities", "RECORD", mode="REPEATED", fields=[
