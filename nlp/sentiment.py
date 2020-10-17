@@ -53,6 +53,10 @@ class SentimentAnalyser():
             sentiment_annotations = self.perform_sentiment_analysis(response.body)
             self.firestore.update_documents(
                 self.firestore.responses_ref,
+                response.id,
+                self.format_sentiment(sentiment_annotations)
+            )
+        logging.info("performed sentiment analysis on %d documents" % (len(responses)))
 
     def analyse_entities_sentiment(self, comments: list):
         for comment in comments:
