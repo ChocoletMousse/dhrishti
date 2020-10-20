@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'crispy_forms',
     'dhrishtirest',
-    'frontend'
+    # 'frontend'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

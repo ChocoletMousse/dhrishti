@@ -1,8 +1,9 @@
+.DS_Store
 .venv
 .env
 __pycache__
 .vscode
-db.sqlite3
+dhrishti-firestore-creds.json
 
 # js
 node_modules
