@@ -10,7 +10,10 @@ create-env:
 
 requirements:
 	pip install -r requirements.txt
-	npm
+
+
+react-requirements:
+	npm install
 
 
 run: 
@@ -22,7 +25,12 @@ docker-django:
 	docker build -f Django.Dockerfile -t dhrishti-backend .
 
 
-react-requirements:
-	npm install
+docker-nginx:
+	docker build -f Node.Dockerfile -t nginx-server frontend
+
+
+
+
+
 
 
