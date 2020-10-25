@@ -1,5 +1,5 @@
-FROM node:12.16.3
-ENV NODE_ENV=production
-WORKDIR /app
-COPY ["package.json", "package-lock.json*","webpack.config.json", "./"]
-COPY ["./frontend", .]
+FROM nginx
+COPY ["nginx.conf", "/etc/nginx/nginx.conf"]
+RUN ["rm", "-rf", "/usr/share/nginx/html/*"]
+COPY ["./dist", "/usr/share/nginx/html/"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

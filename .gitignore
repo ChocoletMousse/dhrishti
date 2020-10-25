@@ -9,3 +9,4 @@ dhrishti-firestore-creds.json
 node_modules
 .pytest_cache
 .vscode
+dist
