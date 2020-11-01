@@ -3,7 +3,6 @@
 # from django.test import Client
 
 
-class TestViews():
-
+class TestViews:
     def test_load_subreddit_posts(self):
         pass

@@ -13,12 +13,16 @@ sentiment = SentimentAnalyser()
 @require_http_methods(["POST"])
 def load_analyse_subreddit_posts(request):
     if request.method == "POST":
-        json_form = request.body.decode('utf-8')
+        json_form = request.body.decode("utf-8")
         form = json.loads(json_form)
         logging.info(f"received the following data: {form}")
-        submissions = reddit_connector.fetch_posts(form['subreddit'], form['order'], form['limit'])
+        submissions = reddit_connector.fetch_posts(
+            form["subreddit"], form["order"], form["limit"]
+        )
         sentiment.analyse_submissions(submissions)
-        return HttpResponse("Gathered the %s results from /r/%s" % (form['order'], form['subreddit']))
+        return HttpResponse(
+            "Gathered the %s results from /r/%s" % (form["order"], form["subreddit"])
+        )
     else:
         return HttpResponse(f"Cannot use a {request.method} method for this endpoint.")
 
@@ -32,11 +36,11 @@ def get_submission_data(request):
 
 @require_http_methods(["POST"])
 def load_analyse_comments(request):
-    if request.method == 'POST':
-        json_body = request.body.decode('utf-8')
+    if request.method == "POST":
+        json_body = request.body.decode("utf-8")
         json_submission = json.loads(json_body)
         logging.info(f"received the following data {json_submission}")
-        submission_id = json_submission['submissionId']
+        submission_id = json_submission["submissionId"]
         comments = reddit_connector.fetch_comments(submission_id, 5)
         sentiment.analyse_comments(comments)
         sentiment.analyse_entities_sentiment(comments)

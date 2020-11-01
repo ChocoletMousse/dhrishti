@@ -1,5 +1,4 @@
-from google.cloud import language
-from google.cloud.language import types, enums
+from google.cloud import language_v1
 from google.cloud.firestore import SERVER_TIMESTAMP
 from nlp.thresholds import sentiment_score, sentiment_magnitude
 from sinks.database import FirestoreReddit, BigQueryReddit
@@ -9,10 +8,11 @@ import logging
 from datetime import datetime
 
 
-class SentimentAnalyser():
-
+class SentimentAnalyser:
     def __init__(self):
-        self._client = language.LanguageServiceClient()
+        self._client = language_v1.LanguageServiceClient()
+        self._langauge = "en"
+        self._type = language_v1.Document.Type.PLAIN_TEXT
         self.firestore = FirestoreReddit()
         self.bq = BigQueryReddit()
 
@@ -23,9 +23,11 @@ class SentimentAnalyser():
             self.firestore.update_documents(
                 self.firestore.subreddit_ref,
                 submission.id,
-                self.format_sentiment(sentiment_annotations)
+                self.format_sentiment(sentiment_annotations),
             )
-        logging.info("performed sentiment analysis on %d documents" % (len(submissions)))
+        logging.info(
+            "performed sentiment analysis on %d documents" % (len(submissions))
+        )
 
     def analyse_comments(self, comments: list):
         """Go through each document in a collection and analyse the sentiment."""
@@ -35,13 +37,15 @@ class SentimentAnalyser():
 
             formatted_firestore = self.format_sentiment(sentiment_annotations)
             formatted_bigquery = self.format_entities(annotations.entities, comment)
-            formatted_bigquery[fields.COMMENT_SENTIMENT] = formatted_firestore.get(fields.SENTIMENT_SCORE)
-            formatted_bigquery[fields.COMMENT_MAGNITUDE] = formatted_firestore.get(fields.SENTIMENT_MAGNITUDE)
+            formatted_bigquery[fields.COMMENT_SENTIMENT] = formatted_firestore.get(
+                fields.SENTIMENT_SCORE
+            )
+            formatted_bigquery[fields.COMMENT_MAGNITUDE] = formatted_firestore.get(
+                fields.SENTIMENT_MAGNITUDE
+            )
 
             self.firestore.update_documents(
-                self.firestore.comments_ref,
-                comment.id,
-                formatted_firestore
+                self.firestore.comments_ref, comment.id, formatted_firestore
             )
             self.bq.write_to_table([formatted_bigquery])
 
@@ -54,7 +58,7 @@ class SentimentAnalyser():
             self.firestore.update_documents(
                 self.firestore.responses_ref,
                 response.id,
-                self.format_sentiment(sentiment_annotations)
+                self.format_sentiment(sentiment_annotations),
             )
         logging.info("performed sentiment analysis on %d documents" % (len(responses)))
 
@@ -63,21 +67,29 @@ class SentimentAnalyser():
             annotations = self.perform_entity_sentiment_analysis(comment.body)
             formatted = self.format_entities(annotations.entities, comment)
             self.bq.write_to_table(formatted)
-        logging.info("performed sentiment analysis on entities in %d documents" % (len(comments)))
+        logging.info(
+            "performed sentiment analysis on entities in %d documents" % (len(comments))
+        )
 
     def perform_sentiment_analysis(self, target_attr: str) -> list:
-        doc = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=target_attr)
-        annotations = self._client.analyze_sentiment(document=doc)
+        doc = {"content": target_attr, "type": self._type, "language": self._langauge}
+        annotations = self._client.analyze_sentiment(
+            request={"document": doc, "encoding_type": language_v1.EncodingType.UTF8}
+        )
         return annotations
 
     def perform_entity_analysis(self, target_attr: str) -> list:
-        doc = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=target_attr)
-        annotations = self._client.analyze_entities(document=doc)
+        doc = {"content": target_attr, "type": self._type, "language": self._langauge}
+        annotations = self._client.analyze_entities(
+            request={"document": doc, "encoding_type": language_v1.EncodingType.UTF8}
+        )
         return annotations
 
     def perform_entity_sentiment_analysis(self, target_attr: str) -> list:
-        doc = types.Document(type=enums.Document.Type.PLAIN_TEXT, content=target_attr)
-        annotations = self._client.analyze_entity_sentiment(document=doc)
+        doc = {"content": target_attr, "type": self._type, "language": self._langauge}
+        annotations = self._client.analyze_entity_sentiment(
+            request={"document": doc, "encoding_type": language_v1.EncodingType.UTF8}
+        )
         return annotations
 
     def format_sentiment(self, annotations: dict) -> dict:
@@ -86,7 +98,9 @@ class SentimentAnalyser():
         negative_count = 0
         parameters = {
             fields.SENTIMENT_SCORE: round(annotations.document_sentiment.score, 4),
-            fields.SENTIMENT_MAGNITUDE: round(annotations.document_sentiment.magnitude, 4)
+            fields.SENTIMENT_MAGNITUDE: round(
+                annotations.document_sentiment.magnitude, 4
+            ),
         }
         for sentence in annotations.sentences:
             if sentiment_score(sentence) and sentiment_magnitude(sentence):
@@ -106,5 +120,7 @@ class SentimentAnalyser():
         parameters[fields.SCORE] = comment.score
         parameters[fields.ENTITIES] = cleaned_entities
         parameters[fields.LANDING_TIMESTAMP] = str(datetime.now())
-        parameters[fields.CREATED_TIMESTAMP] = str(datetime.utcfromtimestamp(int(comment.created_utc)))
+        parameters[fields.CREATED_TIMESTAMP] = str(
+            datetime.utcfromtimestamp(int(comment.created_utc))
+        )
         return parameters

@@ -12,6 +12,7 @@ def big_query_reddit():
     bq = BigQueryReddit()
     return bq
 
+
 @pytest.fixture(scope="function")
 def django_client():
     return Client()
@@ -47,36 +48,35 @@ def reddit_connector(reddit, subreddit):
 def reddit_submission_data():
     mock_submission_1 = MagicMock()
     mock_submission_2 = MagicMock()
-    return [
-        mock_submission_1,
-        mock_submission_2
-    ]
+    return [mock_submission_1, mock_submission_2]
 
 
 @pytest.fixture(scope="function")
 def sentiment_entity_sample():
-    return [{
-        "comment_id": "test_id",
-        "entities": [
-            {
-                "entity_name": "entity.name",
-                "entity_type": "enums.Entity.Type(entity.type).name",
-                "salience": 1.44,
-                "entity_sentiment_score": 1.44,
-                "entity_sentiment_magnitude": 1.44,
-                "mentions_count": 1
-            },
-            {
-                "entity_name": "entity.name2",
-                "entity_type": "enums.Entity.Type(entity.type).name2",
-                "salience": 1.45,
-                "entity_sentiment_score": 1.45,
-                "entity_sentiment_magnitude": 1.45,
-                "mentions_count": 2
-            },
-        ],
-        "score": 2,
-        "subreddit": "abcd",
-        "subreddit_name": "test_subreddit",
-        "landing_timestamp": str(datetime.datetime.now())
-    }]
+    return [
+        {
+            "comment_id": "test_id",
+            "entities": [
+                {
+                    "entity_name": "entity.name",
+                    "entity_type": "enums.Entity.Type(entity.type).name",
+                    "salience": 1.44,
+                    "entity_sentiment_score": 1.44,
+                    "entity_sentiment_magnitude": 1.44,
+                    "mentions_count": 1,
+                },
+                {
+                    "entity_name": "entity.name2",
+                    "entity_type": "enums.Entity.Type(entity.type).name2",
+                    "salience": 1.45,
+                    "entity_sentiment_score": 1.45,
+                    "entity_sentiment_magnitude": 1.45,
+                    "mentions_count": 2,
+                },
+            ],
+            "score": 2,
+            "subreddit": "abcd",
+            "subreddit_name": "test_subreddit",
+            "landing_timestamp": str(datetime.datetime.now()),
+        }
+    ]

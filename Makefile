@@ -5,7 +5,7 @@ export
 
 create-env:
 	python3 -m venv .venv
-	source ./.venv/bin/activate
+	# source ./.venv/bin/activate
 
 
 requirements:
@@ -22,6 +22,10 @@ run:
 
 docker-django:
 	docker build -f Django.Dockerfile -t dhrishti-backend .
+
+
+django-run:
+	docker run -d -p 8000:8000 --name dhrishti dhrishti-backend
 
 
 docker-nginx:

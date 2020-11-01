@@ -18,7 +18,7 @@ class RedditConnector(FirestoreReddit):
         self._reddit_instance = Reddit(
             client_id=os.getenv("REDDIT_CLIENT_ID"),
             client_secret=os.getenv("REDDIT_SECRET"),
-            user_agent=os.getenv("REDDIT_APPLICATION")
+            user_agent=os.getenv("REDDIT_APPLICATION"),
         )
 
     def incorrect_comment_length(self, comment: Comment) -> bool:
@@ -28,7 +28,9 @@ class RedditConnector(FirestoreReddit):
 
     def fetch_posts(self, subreddit_name: str, order: str, limit: int) -> list:
         """Write the retrieved subreddit submissions to FirestoreReddit."""
-        logging.info(f"reddit connector: retreiving {order} {limit} posts from /r/{subreddit_name}")
+        logging.info(
+            f"reddit connector: retreiving {order} {limit} posts from /r/{subreddit_name}"
+        )
         subreddit_obj = self._reddit_instance.subreddit(subreddit_name)
         if order == "top":
             submissions = subreddit_obj.top(limit=limit)
@@ -49,7 +51,7 @@ class RedditConnector(FirestoreReddit):
         comments = []
         for submission in submissions:
             comment_count = 0
-            submission.comment_sort = 'best'
+            submission.comment_sort = "best"
             submission.comments.replace_more(limit=10)
             for comment in submission.comments:
                 if comment_count == limit:
@@ -68,7 +70,7 @@ class RedditConnector(FirestoreReddit):
         comments = []
         submission = self._reddit_instance.submission(submission_id)
         comment_count = 0
-        submission.comment_sort = 'best'
+        submission.comment_sort = "best"
         submission.comments.replace_more(limit=10)
         for comment in submission.comments:
             if comment_count == limit:

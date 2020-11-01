@@ -2,11 +2,10 @@ import pytest
 from sources.reddit.reddit_connector import RedditConnector
 
 
-class TestRedditConnector():
-
+class TestRedditConnector:
     @pytest.mark.usefixtures("reddit_connector", "subreddit")
     def test_fetch_posts(self, reddit_connector: RedditConnector, subreddit):
-        test_top = reddit_connector.fetch_posts('test', 'top', 2)
+        test_top = reddit_connector.fetch_posts("test", "top", 2)
 
         reddit_connector._reddit_instance.subreddit.call_count == 1
         reddit_connector.write_submission.call_count == 2
@@ -15,7 +14,7 @@ class TestRedditConnector():
         subreddit.controversial.assert_not_called()
         assert len(test_top) == 2
 
-        test_new = reddit_connector.fetch_posts('test', 'latest', 2)
+        test_new = reddit_connector.fetch_posts("test", "latest", 2)
 
         reddit_connector._reddit_instance.subreddit.call_count == 2
         subreddit.new.assert_called_once()
@@ -23,7 +22,7 @@ class TestRedditConnector():
         reddit_connector.write_submission.call_count == 4
         assert len(test_new) == 2
 
-        test_controversial = reddit_connector.fetch_posts('test', 'controversial', 2)
+        test_controversial = reddit_connector.fetch_posts("test", "controversial", 2)
 
         reddit_connector._reddit_instance.subreddit.call_count == 3
         subreddit.controversial.assert_called_once()
