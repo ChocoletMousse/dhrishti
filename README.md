@@ -21,3 +21,29 @@
 ## _todo_:
 
 - use gunicorn in django container before deploying to kubernetes
+- address error:
+```
+{
+  "textPayload": "ERROR:django.security.DisallowedHost:Invalid HTTP_HOST header: '35.235.79.222'. You may need to add '35.235.79.222' to ALLOWED_HOSTS.\n",
+  "insertId": "td99jk05k55qcpb2z",
+  "resource": {
+    "type": "k8s_container",
+    "labels": {
+      "location": "us-west2-b",
+      "project_id": "arcane-boulder-263622",
+      "container_name": "dhrishti-backend",
+      "cluster_name": "dhrishti-cluster",
+      "pod_name": "dhrishti-9955b7797-q48lr",
+      "namespace_name": "default"
+    }
+  },
+  "timestamp": "2020-11-01T20:34:34.788117889Z",
+  "severity": "ERROR",
+  "labels": {
+    "k8s-pod/app": "django-pod",
+    "k8s-pod/pod-template-hash": "9955b7797"
+  },
+  "logName": "projects/arcane-boulder-263622/logs/stderr",
+  "receiveTimestamp": "2020-11-01T20:34:41.323608716Z"
+}
+```
