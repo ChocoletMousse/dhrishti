@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: dhrishti
+    labels:
+        app: django
+spec:
+    replicas:
+        1
+    selector:
+        matchLabels:
+            app: django-pod
+    template:
+        metadata:
+            name: dhrishti-backend-pod
+            labels:
+                app: django-pod
+        spec:
+            containers:
+            - name: dhrishti-backend
+              image: eu.gcr.io/arcane-boulder-263622/dhrishti-backend
+              ports:
+              - containerPort: 8000

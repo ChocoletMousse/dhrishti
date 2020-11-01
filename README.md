@@ -20,7 +20,4 @@
 
 ## _todo_:
 
-- Map of all the possible searches to their expected results.
-- Decide what algorithms to use
-- Decide what database to use
-- Decide how to write to database
+- use gunicorn in django container before deploying to kubernetes
