@@ -15,7 +15,7 @@ class SubmissionsList extends React.Component {
     async componentDidMount() {
         if (this.state.viewPosts) {
             if (this.state.data.length == 0) {
-                const url = 'http://127.0.0.1:8000/dhrishti/data/submissions';
+                const url = '/dhrishti/data/submissions';
                 let response = await axios.get(url);
                 if (response.status == 200) {
                     if (!response.data.length > 0) {

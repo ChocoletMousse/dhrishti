@@ -12,7 +12,7 @@ const Submission = (props) => {
     const loadCommentsForSubmission = async () => {
         setLoading(true);
         console.log('checking comments data for submission ' + props.submission.id);
-        const url = `http://127.0.0.1:8000/dhrishti/data/comments/${props.submission.id}`;
+        const url = `/dhrishti/data/comments/${props.submission.id}`;
         let response = await axios.get(url);
         if (response.status == 200) {
             if (!response.data.length > 0) {

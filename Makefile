@@ -17,7 +17,6 @@ react-requirements:
 
 
 run: 
-	# npm run dev
 	python manage.py runserver
 
 

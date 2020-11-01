@@ -9,7 +9,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 const Dhrishti = {
     async searchReddit(subreddit, order, limit) {
-        const url = `http://127.0.0.1:8000/dhrishti/search`;
+        const url = `/dhrishti/search`;
         console.debug(`received csrf token: ${csrfToken}`);
         console.log(`retrieving the ${order} ${limit} submissions from /r/${subreddit}`);
         let result = await fetch(
@@ -34,7 +34,7 @@ const Dhrishti = {
     async loadCommentsForSubmission(id) {
         console.debug(`received csrf token: ${csrfToken}`);
         console.debug('loading comments for submission: ' + id);
-        const url = 'http://127.0.0.1:8000/dhrishti/search/comments';
+        const url = '/dhrishti/search/comments';
         let response = await axios.post(
             url,
             {submissionId: id},

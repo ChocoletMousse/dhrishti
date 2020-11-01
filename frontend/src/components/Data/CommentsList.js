@@ -15,7 +15,7 @@ class CommentsList extends React.Component{
     async componentDidMount() {
         if (this.state.viewComments) {
             if (this.state.data.length == 0) {
-                const url = 'http://127.0.0.1:8000/dhrishti/data/comments';
+                const url = '/dhrishti/data/comments';
                 let response = await axios.get(url);
                 if (response.status == 200) {
                     if (!response.data.length > 0) {

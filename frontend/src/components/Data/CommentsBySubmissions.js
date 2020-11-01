@@ -12,7 +12,7 @@ const CommentsBySubmission = ({ match }) => {
 
     let loadComments = async () => {
         console.log(`loading new comments with: ${match.params}`);
-        const url = `http://127.0.0.1:8000/dhrishti/data/comments/${match.params.submissionId}`;
+        const url = `/dhrishti/data/comments/${match.params.submissionId}`;
         let response = await axios.get(url);
         if (response.status == 200) {
             if (!response.data.length > 0) {
