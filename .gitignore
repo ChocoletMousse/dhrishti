@@ -10,3 +10,4 @@ node_modules
 .pytest_cache
 .vscode
 dist
+secrets.yaml

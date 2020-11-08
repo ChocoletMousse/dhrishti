@@ -11,3 +11,4 @@ python-dotenv
 praw
 pytest
 pytest-dotenv
+gunicorn

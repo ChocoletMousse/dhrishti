@@ -1,0 +1,13 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+    name: dhrishti-ingress
+spec:
+    rules:
+    - host: dhrishti.analytics.com
+      http:
+        paths:
+        - path: /*
+          backend:
+            serviceName: dhrishti-frontend-service
+            servicePort: 80

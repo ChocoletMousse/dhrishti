@@ -1,0 +1,36 @@
+# SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+    name: dhrishti-frontend-service
+spec:
+    type: LoadBalancer
+    selector:
+        app: nginx-pod
+    ports:
+    - port: 80
+      targetPort: 80
+---
+# DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: dhrishti-frontend-deployment
+    labels:
+        app: react
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: nginx-pod
+    template:
+        metadata:
+            name: dhrishti-frontend-pod
+            labels:
+                app: nginx-pod
+        spec:
+            containers:
+            - name: dhrishti-frontend
+              image: eu.gcr.io/arcane-boulder-263622/dhrishti-frontend
+              ports:
+                - containerPort: 80

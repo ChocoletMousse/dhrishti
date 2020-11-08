@@ -24,16 +24,19 @@ docker-django:
 	docker build -f Django.Dockerfile -t dhrishti-backend .
 
 
-django-run:
-	docker run -d -p 8000:8000 --name dhrishti dhrishti-backend
+docker-django-run:
+	docker-compose up
 
 
-docker-nginx:
-	docker build -f Node.Dockerfile -t nginx-server frontend
+docker-react:
+	docker build -f Node.Dockerfile -t nginx-server .
 
 
+deploy-backend:
+	kubectl create -f deploy/deploy.yaml
 
 
-
+kubernetes-secrets:
+	# kubectl create 
 
 

@@ -12,8 +12,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,11 +21,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "-!n3x(zp(!rzf+p!#729yb6vdij0!(-agq)sko!i1^lxo3sbba"
+# SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.getenv("DJANGO_DEBUG", 1))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", []).split(',')
 
 
 # Application definition
@@ -42,7 +41,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "crispy_forms",
     "dhrishtirest",
-    # 'frontend'
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
@@ -80,13 +78,6 @@ WSGI_APPLICATION = "dhrishtisettings.wsgi.application"
 
 # FirestoreReddit
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
 
 
 # Password validation
