@@ -1,1 +1,13 @@
+django
+djangorestframework
+django-rest-knox
+django-crispy-forms
+google-cloud-firestore
+google-cloud-language
+google-cloud-core
+google-cloud-bigquery
 flake8
+python-dotenv
+praw
+pytest
+pytest-dotenv
