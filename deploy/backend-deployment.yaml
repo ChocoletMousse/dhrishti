@@ -34,7 +34,7 @@ spec:
               image: eu.gcr.io/arcane-boulder-263622/dhrishti-backend
               env:
                 - name: DJANGO_ALLOWED_HOSTS
-                  value: dhrishti-frontend-service
+                  value: dhrishti-backend-service
                 - name: DJANGO_DEBUG
                   value: '0'
                 - name: PROJECT_ID
@@ -48,12 +48,18 @@ spec:
                 - name: REDDIT_SECRET
                   valueFrom:
                     secretKeyRef:
-                        name: dhrishti-secrets
-                        key: reddit-secret
+                      name: dhrishti-secrets
+                      key: reddit-secret
                 - name: DJANGO_SECRET_KEY
                   valueFrom:
                     secretKeyRef:
-                        name: dhrishti-secrets
-                        key: django-secret-key
+                      name: dhrishti-secrets
+                      key: django-secret-key
+                - name: GOOGLE_APPLICATION_CREDENTIALS
+                  valueFrom:
+                    secretKeyRef:
+                      name: dhrishti-secrets
+                      key: google-application-credentials
+
               ports:
               - containerPort: 8000

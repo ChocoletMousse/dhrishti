@@ -43,7 +43,6 @@ def load_analyse_comments(request):
         submission_id = json_submission["submissionId"]
         comments = reddit_connector.fetch_comments(submission_id, 5)
         sentiment.analyse_comments(comments)
-        sentiment.analyse_entities_sentiment(comments)
         return HttpResponse("fetched comments.")
     else:
         return HttpResponse(f"Cannot use a {request.method} method for this endpoint.")

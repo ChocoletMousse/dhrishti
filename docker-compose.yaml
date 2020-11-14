@@ -1,8 +1,13 @@
 version: '3'
 services:
-    dhrishti:
+    dhrishti-backend:
         image: dhrishti-backend
         env_file:
-            - ./.env
+            - ./.local.env
         ports:
-            - "80:8000"
+            - "8000:8000"
+    dhrishti-ui:
+        image: frontend
+        ports:
+            - "80:80"
+

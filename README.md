@@ -19,6 +19,8 @@
     * If yes, the algorithm will search for comments 
 
 ## _todo_:
-
+- Fix ports between LoadBalancer and Ingress services
+- 404 Error: CSRF token not available when using form on _Search_ page
 ```
+'GOOGLE_APPLICATION_CREDENTIALS': '/dhrishti/###-###-###.json\n'
 ```

@@ -55,7 +55,7 @@ def reddit_response_schema(response: Comment, comment_id) -> dict:
 def reddit_entity_schema(entity) -> dict:
     return {
         "entity_name": entity.name,
-        "entity_type": language_v1.Entity.Type(entity.type).name,
+        "entity_type": language_v1.Entity.Type(entity.type_).name,
         "salience": entity.salience,
         "entity_sentiment_score": entity.sentiment.score,
         "entity_sentiment_magnitude": entity.sentiment.magnitude,

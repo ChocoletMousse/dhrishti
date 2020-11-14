@@ -6,6 +6,7 @@ from praw.models import Comment
 from utils import fields, schema
 import logging
 from datetime import datetime
+import os
 
 
 class SentimentAnalyser:
@@ -33,9 +34,9 @@ class SentimentAnalyser:
         """Go through each document in a collection and analyse the sentiment."""
         for comment in comments:
             sentiment_annotations = self.perform_sentiment_analysis(comment.body)
-            annotations = self.perform_entity_sentiment_analysis(comment.body)
-
             formatted_firestore = self.format_sentiment(sentiment_annotations)
+
+            annotations = self.perform_entity_sentiment_analysis(comment.body)
             formatted_bigquery = self.format_entities(annotations.entities, comment)
             formatted_bigquery[fields.COMMENT_SENTIMENT] = formatted_firestore.get(
                 fields.SENTIMENT_SCORE
@@ -62,31 +63,31 @@ class SentimentAnalyser:
             )
         logging.info("performed sentiment analysis on %d documents" % (len(responses)))
 
-    def analyse_entities_sentiment(self, comments: list):
-        for comment in comments:
-            annotations = self.perform_entity_sentiment_analysis(comment.body)
-            formatted = self.format_entities(annotations.entities, comment)
-            self.bq.write_to_table(formatted)
-        logging.info(
-            "performed sentiment analysis on entities in %d documents" % (len(comments))
-        )
+    # def analyse_entities_sentiment(self, comments: list):
+    #     for comment in comments:
+    #         annotations = self.perform_entity_sentiment_analysis(comment.body)
+    #         formatted = self.format_entities(annotations.entities, comment)
+    #         self.bq.write_to_table(formatted)
+    #     logging.info(
+    #         "performed sentiment analysis on entities in %d documents" % (len(comments))
+    #     )
 
     def perform_sentiment_analysis(self, target_attr: str) -> list:
-        doc = {"content": target_attr, "type": self._type, "language": self._langauge}
+        doc = language_v1.Document(content=target_attr, type_=self._type, language=self._langauge)
         annotations = self._client.analyze_sentiment(
             request={"document": doc, "encoding_type": language_v1.EncodingType.UTF8}
         )
         return annotations
 
     def perform_entity_analysis(self, target_attr: str) -> list:
-        doc = {"content": target_attr, "type": self._type, "language": self._langauge}
+        doc = language_v1.Document(content=target_attr, type_=self._type, language=self._langauge)
         annotations = self._client.analyze_entities(
             request={"document": doc, "encoding_type": language_v1.EncodingType.UTF8}
         )
         return annotations
 
     def perform_entity_sentiment_analysis(self, target_attr: str) -> list:
-        doc = {"content": target_attr, "type": self._type, "language": self._langauge}
+        doc = language_v1.Document(content=target_attr, type_=self._type, language=self._langauge)
         annotations = self._client.analyze_entity_sentiment(
             request={"document": doc, "encoding_type": language_v1.EncodingType.UTF8}
         )
@@ -115,6 +116,7 @@ class SentimentAnalyser:
         """Returns a dict containing entity analysis values."""
         cleaned_entities = [schema.reddit_entity_schema(entity) for entity in entities]
         parameters = {"subreddit": comment.subreddit.name}
+        parameters[fields.SUBREDDIT_NAME] = comment.subreddit.display_name
         parameters[fields.COMMENT_ID] = comment.id
         parameters[fields.SUBREDDIT_ID] = comment.subreddit.id
         parameters[fields.SCORE] = comment.score
