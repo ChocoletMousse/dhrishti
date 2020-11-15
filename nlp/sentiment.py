@@ -6,7 +6,6 @@ from praw.models import Comment
 from utils import fields, schema
 import logging
 from datetime import datetime
-import os
 
 
 class SentimentAnalyser:
