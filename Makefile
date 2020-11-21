@@ -34,9 +34,5 @@ docker-react:
 
 deploy-backend:
 	kubectl create -f deploy/deploy.yaml
-
-
-kubernetes-secrets:
-	# kubectl create 
-
+ 
 

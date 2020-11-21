@@ -5,7 +5,7 @@ metadata:
     name: dhrishti-frontend-service
 spec:
     type: LoadBalancer
-    loadBalancerIP: []
+    loadBalancerIP: 34.120.203.140
     selector:
         app: nginx-pod
     ports:
